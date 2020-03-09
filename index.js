@@ -14,7 +14,7 @@ client.on('ready', () => {
 client.on('guildMemberAdd', member => {
     const channel = member.guild.channels.cache.find(channel => channel.name === "🌸｜general-chat")
     if(!channel) return;
-    channel.send(`> *Welcome to* **Lowkid**, *${member}, please read the rules.*`);
+    channel.send(`> Welcome to **Lowkid**, *${member}, please read the rules.*`);
 });
 
 client.on('message', message => 

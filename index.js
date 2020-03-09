@@ -27,7 +27,7 @@ client.on('message', message =>
             const embed = new MessageEmbed()
             .setTitle('Families')
             .setColor(0xff0000) // COLOR SA GILID
-            .setDescription('Inaayos ko pa po ayii');
+            .setDescription('test');
             message.channel.send(embed);
             break;
         }

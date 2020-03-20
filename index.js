@@ -1,7 +1,7 @@
 
 const { Client, MessageEmbed } = require('discord.js');
 
-const eco = require("discord-economy");
+//const eco = require("discord-economy");
 const client = new Client();
 
 const settings = {
@@ -39,7 +39,7 @@ client.on('message', async message =>
     if (!message.content.startsWith(settings.prefix) || message.author.bot) return;
 
     // Economy
-    if (command === 'balance') {
+    /*if (command === 'balance') {
  
         var output = await eco.FetchBalance(message.author.id)
         message.channel.send(`Hey ${message.author.tag}! You own ${output.balance} lowbucks.`);
@@ -69,7 +69,7 @@ client.on('message', async message =>
         .setFooter('Copyright LWKD 2020', 'https://i.imgur.com/w0y9l7X.png')
         .setDescription('Welcome to Lowkid this server is for people to socialize, and interests such as anime, manga, games, art, and more to be shared as one!');
         message.channel.send(embed);
-    }
+    }*/
     // Confess
     if (command === 'confess') {
         const confess = message.guild.channels.cache.find(confess => confess.name === settings.confess)

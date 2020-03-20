@@ -56,6 +56,12 @@ client.on('message', async message =>
         .setImage('https://media.giphy.com/media/reXcrlJ3OhvDq/giphy.gif')
         message.channel.send(embed);
     }
+    if (command === 'kiss') {
+        const embed = new MessageEmbed()
+        .setImage('https://media.giphy.com/media/perRo4txxsFxe/giphy.gif')
+        message.channel.send(embed);
+    }
+    
     if (command === 'avatar') {
         var user;
         user = message.mentions.users.first(); 

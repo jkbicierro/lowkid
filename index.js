@@ -53,6 +53,7 @@ client.on('message', async message =>
     }
 
     if (command === 'welcome') {
+        message.delete();
         const embed = new MessageEmbed()
         .setTitle(settings.svr)
         .setThumbnail(message.author.displayAvatarURL())
@@ -67,6 +68,7 @@ client.on('message', async message =>
     if (command === 'avatar') {
         var user;
         user = message.mentions.users.first(); 
+        message.delete();
         if (!user) { 
             if (!args[0]) { 
                 user = message.author;

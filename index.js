@@ -65,7 +65,7 @@ client.on('message', async message =>
         .setAuthor('Lowbucks', 'https://i.imgur.com/w0y9l7X.png', 'https://discord.gg/n5PGyV')
         .addField('Discord Nitro', '1500', true)
         .addField('Nitro Classic', '1300', true)
-        .setColor('RANDOM')
+        .setColor('RANDOM') 
         .setFooter('Copyright LWKD 2020', 'https://i.imgur.com/w0y9l7X.png')
         .setDescription('Welcome to Lowkid this server is for people to socialize, and interests such as anime, manga, games, art, and more to be shared as one!');
         message.channel.send(embed);

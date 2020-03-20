@@ -22,11 +22,10 @@ client.on('guildMemberAdd', member => {
     const embed = new MessageEmbed()
     .setTitle(settings.svr)
     .setThumbnail('https://i.imgur.com/w0y9l7X.png')
-    .setAuthor('Lowkid', 'https://i.imgur.com/w0y9l7X.png', 'https://discord.gg/n5PGyV')
     .addField('Username:', `${member}`, true)
     .setColor('RANDOM')
     .setFooter('Copyright LWKD 2020', 'https://i.imgur.com/w0y9l7X.png')
-    .setDescription('Welcome to Lowkid this server is for people to socialize, and interests such as anime, manga, games, art, and more to be shared as one!');
+    .setDescription('Welcome to Lowkid, this server is for people to socialize, and interests such as anime, manga, games, art, and more to be shared as one!');
     channel.send(embed);
 });
 
@@ -54,11 +53,15 @@ client.on('message', async message =>
     if (command === 'slap') {
         const embed = new MessageEmbed()
         .setImage('https://media.giphy.com/media/reXcrlJ3OhvDq/giphy.gif')
+        .setFooter('Copyright LWKD 2020', 'https://i.imgur.com/w0y9l7X.png')
+        message.delete();
         message.channel.send(embed);
     }
     if (command === 'kiss') {
         const embed = new MessageEmbed()
         .setImage('https://media.giphy.com/media/perRo4txxsFxe/giphy.gif')
+        .setFooter('Copyright LWKD 2020', 'https://i.imgur.com/w0y9l7X.png')
+        message.delete();
         message.channel.send(embed);
     }
     
@@ -81,6 +84,7 @@ client.on('message', async message =>
         else { 
             GetUserAvatar(user);
         }
+        message.delete();
     }
     function GetUserAvatar(user) {
         const embed = new MessageEmbed()

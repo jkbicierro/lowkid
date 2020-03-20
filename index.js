@@ -40,14 +40,14 @@ client.on('message', async message =>
     if (!message.content.startsWith(settings.prefix) || message.author.bot) return;
 
     if (command === 'confess') {
-        const confess = message.guild.channels.cache.find(confess => confess.name === "confession")
+        const confess = message.guild.channels.cache.find(confess => confess.name === "😈｜anonymous")
         if(!confess) return;
         mentionMessage = message.content.slice (8);
         const embed = new MessageEmbed()
         .setTitle(settings.svr)
-        .setDescription('Usage: /confess [text].')
+        .setDescription('Anonymous')
         .setColor('RANDOM')
-        .addField('Anonymous', mentionMessage, true)
+        .addField('Usage: /confess [text]', mentionMessage, true)
         .setFooter('Copyright LWKD 2020', 'https://i.imgur.com/w0y9l7X.png');
         message.delete();
         confess.send(embed);

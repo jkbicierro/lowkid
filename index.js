@@ -1,7 +1,7 @@
 
-const { Discord, MessageEmbed } = require('discord.js');
+const { Client, MessageEmbed } = require('discord.js');
 
-const bot = new Discord();
+const bot = new Client();
 
 const settings = {
     prefix: '/',

@@ -3,9 +3,13 @@ const { Client, MessageEmbed } = require('discord.js');
 
 
 const client = new Client();
-const token = 'Njg2MDg2MDU4Njc2NDUzMzg1.XmSFng.0uS8xLcGzXqQRye5cCkGazVnvZ4';
 
-const PREFIX = '/';
+
+const settings = {
+    prefix: '/',
+    token: 'Njg2ODAxMDY2NDY1MDM0MjY5.Xmcglg.H-ZZOkEWKEtYBy_zC9OgY4SisG0',
+    svr: 'Lowkid 낮은아이 PH'
+}
 
 client.on('ready', () => {
   console.log('Pakantot.');
@@ -14,29 +18,84 @@ client.on('ready', () => {
 client.on('guildMemberAdd', member => {
     const channel = member.guild.channels.cache.find(channel => channel.name === "🌸｜general-chat")
     if(!channel) return;
-    channel.send(`> Welcome to **Lowkid**, *${member}, please read the rules.*`);
+    //channel.send(`> Welcome to **Lowkid**, *${member}, please read the rules.*`);
+
+    const embed = new MessageEmbed()
+    .setTitle(settings.svr)
+    .setThumbnail(message.author.displayAvatarURL())
+    .setAuthor('Lowkid', 'https://i.imgur.com/w0y9l7X.png', 'https://discord.gg/n5PGyV')
+    .addField('Username:', message.member.user.tag, true)
+    .addField('Member ID:', message.member.id, true)
+    .setColor('RANDOM')
+    .setFooter('Copyright LWKD 2020', 'https://i.imgur.com/w0y9l7X.png')
+    .setDescription('Welcome to Lowkid this server is for people to socialize, and interests such as anime, manga, games, art, and more to be shared as one!');
+    channel.send(embed);
 });
 
-client.on('message', message => 
+client.on('message', async message => 
 {
-    let args = message.content.substring(PREFIX.length).split(" ");
-    switch(args[0]) 
-    {
-        case 'families':
-        {
-            const embed = new MessageEmbed()
-            .setTitle('Families')
-            .setColor(0xff0000) // COLOR SA GILID
-            .setDescription('test');
-            message.channel.send(embed);
-            break;
+    var command = message.content.toLowerCase().slice(settings.prefix.length).split(' ')[0];
+    var args = message.content.split(' ').slice(1);
+    
+    if (!message.content.startsWith(settings.prefix) || message.author.bot) return;
+
+    if (command === 'confess') {
+        const confess = message.guild.channels.cache.find(confess => confess.name === "confession")
+        if(!confess) return;
+        mentionMessage = message.content.slice (8);
+        const embed = new MessageEmbed()
+        .setTitle(settings.svr)
+        .setDescription('Usage: /confess [text].')
+        .setColor('RANDOM')
+        .addField('Anonymous', mentionMessage, true)
+        .setFooter('Copyright LWKD 2020', 'https://i.imgur.com/w0y9l7X.png');
+        message.delete();
+        confess.send(embed);
+    }
+
+    if (command === 'welcome') {
+        const embed = new MessageEmbed()
+        .setTitle(settings.svr)
+        .setThumbnail(message.author.displayAvatarURL())
+        .setAuthor('Lowkid', 'https://i.imgur.com/w0y9l7X.png', 'https://discord.gg/n5PGyV')
+        .addField('Username:', message.member.user.tag, true)
+        .addField('Member ID:', message.member.id, true)
+        .setColor('RANDOM')
+        .setFooter('Copyright LWKD 2020', 'https://i.imgur.com/w0y9l7X.png')
+        .setDescription('Welcome to Lowkid this server is for people to socialize, and interests such as anime, manga, games, art, and more to be shared as one!');
+        message.channel.send(embed);
+    }
+    if (command === 'avatar') {
+        var user;
+        user = message.mentions.users.first(); 
+        if (!user) { 
+            if (!args[0]) { 
+                user = message.author;
+                GetUserAvatar(user);
+            } 
+            else { 
+                var id = args[0]
+                client.fetchUser(id).then(user => {
+                    GetUserAvatar(user) 
+                })
+                .catch(error => console.log(error))
+            }
+        } 
+        else { 
+            GetUserAvatar(user);
         }
-        case 'umaru':
-        {
-            message.channel.send('Ang pangit mo umaru');
-            break;
-        }
+    }
+    function GetUserAvatar(user) {
+        const embed = new MessageEmbed()
+        .setTitle(settings.svr)
+        .setColor('RANDOM')
+        .setImage(user.displayAvatarURL())
+        .setFooter('Copyright LWKD 2020', 'https://i.imgur.com/w0y9l7X.png')
+        message.channel.send(embed);
     }
 });
 
-client.login(token);
+
+
+
+client.login(settings.token);

@@ -41,6 +41,7 @@ client.on('message', async message =>
 
     if (command === 'confess') {
         const confess = message.guild.channels.cache.find(confess => confess.name === "😈｜anonymous")
+        message.delete();
         if(!confess) return;
         mentionMessage = message.content.slice (8);
         const embed = new MessageEmbed()
@@ -49,7 +50,6 @@ client.on('message', async message =>
         .setColor('RANDOM')
         .addField('Anonymous', mentionMessage, true)
         .setFooter('Copyright LWKD 2020', 'https://i.imgur.com/w0y9l7X.png');
-        message.delete();
         confess.send(embed);
     }
 

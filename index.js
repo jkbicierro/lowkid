@@ -53,7 +53,7 @@ client.on('message', async message =>
     if (command === 'slap') {
 
         const embed = new MessageEmbed()
-        .setAuthor(message.member.user.tag + ' slaps ' + message.mentions.users.first(), message.author.displayAvatarURL(), '')
+        .setAuthor(message.member.user.tag + ' slaps ' + args, message.author.displayAvatarURL(), '')
         .setImage('https://media.giphy.com/media/reXcrlJ3OhvDq/giphy.gif')
         .setFooter('Copyright LWKD 2020', 'https://i.imgur.com/w0y9l7X.png')
         message.delete();

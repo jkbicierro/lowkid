@@ -7,7 +7,7 @@ const client = new Client();
 
 const settings = {
     prefix: '/',
-    token: 'Njg2ODAxMDY2NDY1MDM0MjY5.Xmcglg.H-ZZOkEWKEtYBy_zC9OgY4SisG0',
+    token: 'Njg2MDg2MDU4Njc2NDUzMzg1.XnRvlw.RykOUqX7vMsEifk1Iqv1Wj35oUI',
     svr: 'Lowkid 낮은아이 PH'
 }
 

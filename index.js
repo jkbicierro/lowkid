@@ -46,10 +46,9 @@ client.on('message', async message =>
         mentionMessage = message.content.slice (8);
         const embed = new MessageEmbed()
         .setTitle(settings.svr)
-        .setDescription('Usage: /confess [text]')
         .setColor('RANDOM')
         .addField('Anonymous', mentionMessage, true)
-        .setFooter('Copyright LWKD 2020', 'https://i.imgur.com/w0y9l7X.png');
+        .setFooter('Usage: /confess [text]', 'https://i.imgur.com/w0y9l7X.png');
         confess.send(embed);
     }
 

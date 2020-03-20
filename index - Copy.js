@@ -1,7 +1,7 @@
 
-const { Discord, MessageEmbed } = require('discord.js');
+const { Client, MessageEmbed } = require('discord.js');
 
-const bot = new Discord();
+const client = new Client();
 
 const settings = {
     prefix: '/',
@@ -11,11 +11,11 @@ const settings = {
     svr: 'Lowkid 낮은아이 PH'
 }
 
-bot.on('ready', () => {
+client.on('ready', () => {
   console.log('Pakantot.');
 });
 
-bot.on('guildMemberAdd', member => {
+client.on('guildMemberAdd', member => {
     const channel = member.guild.channels.cache.find(channel => channel.name === settings.general)
     if(!channel) return;
 
@@ -29,7 +29,7 @@ bot.on('guildMemberAdd', member => {
     channel.send(embed);
 });
 
-bot.on('message', async message => 
+client.on('message', async message => 
 {
     var command = message.content.toLowerCase().slice(settings.prefix.length).split(' ')[0];
     var args = message.content.split(' ').slice(1);
@@ -78,7 +78,7 @@ bot.on('message', async message =>
             } 
             else { 
                 var id = args[0]
-                bot.fetchUser(id).then(user => {
+                client.fetchUser(id).then(user => {
                     GetUserAvatar(user) 
                 })
                 .catch(error => console.log(error))
@@ -102,4 +102,4 @@ bot.on('message', async message =>
 
 
 
-bot.login(settings.token);
+client.login(settings.token);

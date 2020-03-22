@@ -9,6 +9,7 @@ const settings = {
     token: 'Njg2MDg2MDU4Njc2NDUzMzg1.XnVaww.tevCsvZZ1e26s6xcXNbSnKnRby4',
     general: '🌸｜general-chat',
     announce: '🔔｜announcement',
+    colorful: '§',
     svr: 'Lowkid 낮은아이 PH'
 }
 
@@ -57,7 +58,7 @@ bot.on('message', async message =>
         const embed = new MessageEmbed()
         .setTitle(settings.svr)
         .setColor('RANDOM')
-        .addField('Announcement', mentionMessage, true)
+        .addField('Announce', mentionMessage, true)
         .setFooter('Copyright LWKD 2020', 'https://i.imgur.com/w0y9l7X.png');
         message.delete();
         confess.send(embed);
@@ -83,16 +84,13 @@ bot.on('message', async message =>
 
     if (command === 'rainbow') 
     {
-        const rolez = message.mentions.roles.first() || message.guild.roles.find(r=> r.name === '§')
-        if(!rolez) return message.channel.send(ssettings.messageresponse.rolenotfound).catch(err=> message.channel.send("No response"))
-        if(!message.guild.member(bot.user.id).hasPermission("MANAGE_ROLES")) return message.channel.send(ssettings.messageresponse.missingperm).catch(err=> message.channel.send("no response"))
+        const rolez = message.guild.roles.find(r=> r.name === settings.colorful)
         var colors = ssettings.rainbowrole
         var rolestart = setInterval(function() {
             var colorsz = colors[Math.floor(Math.random() * colors.length)];
             rolez.setColor(colorsz)
         }, 250); //Delay
             message.channel.send(ssettings.messageresponse.success).catch(err=> message.channel.send("No response"))
-
     }
     if (command === 'avatar') {
         var user;

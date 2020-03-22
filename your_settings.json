@@ -5,11 +5,13 @@
     "rainbowcommand": "rainbow",
     "rainbowstop": "stop",
     "rainbowrole": [
-        "#F8B195",
-        "#F67280",
-        "#C06C84",
-        "#6C5B7B",
-        "#355C7D"
+        "#9400D3",
+        "#4B0082",
+        "#0000FF",
+        "#00FF00",
+        "#FFFF00",
+        "#FF7F00",
+        "#FF0000"
     ],
     "messageresponse": {
         "missingperm": "I need permission 'MANAGE_ROLES' to execute this action.",

@@ -53,11 +53,11 @@ bot.on('message', async message =>
     if (command === 'cnn') {
         const confess = message.guild.channels.cache.find(confess => confess.name === settings.announce)
         if(!confess) return;
-        //mentionMessages = message.content.slice (8);
+        awit = message.content.slice (4);
         const embed = new MessageEmbed()
         .setTitle(settings.svr)
         .setColor('RANDOM')
-        .addField('Announcement', args, true)
+        .addField('Announcement', awit, true)
         .setFooter('Copyright LWKD 2020', 'https://i.imgur.com/w0y9l7X.png');
         message.delete();
         confess.send(embed);

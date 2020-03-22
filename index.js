@@ -40,7 +40,7 @@ bot.on('message', async message =>
 
     // Confess
     if (command === 'confess') {
-        const confess = message.guild.channels.cache.find(confess => confess.name === settings.general)
+        const confess = message.guild.channels.get("682110743503437845")
         if(!confess) return;
         mentionMessage = message.content.slice (8);
         const embed = new MessageEmbed()

@@ -1,17 +1,12 @@
 {
     "token": "INSERT YOUR BOT TOKEN",
     "prefix": "!",
-    "rainbowdelay": 200,
+    "rainbowdelay": 250,
     "rainbowcommand": "rainbow",
     "rainbowstop": "stop",
     "rainbowrole": [
-        "#9400D3",
-        "#4B0082",
-        "#0000FF",
-        "#00FF00",
-        "#FFFF00",
-        "#FF7F00",
-        "#FF0000"
+        "#ffffff",
+        "#111111"
     ],
     "messageresponse": {
         "missingperm": "I need permission 'MANAGE_ROLES' to execute this action.",

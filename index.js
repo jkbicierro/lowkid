@@ -7,8 +7,8 @@ const bot = new Client();
 const settings = {
     prefix: '/',
     token: 'Njg2MDg2MDU4Njc2NDUzMzg1.XnVaww.tevCsvZZ1e26s6xcXNbSnKnRby4',
-    confess: '😈｜anonymous',
     general: '🌸｜general-chat',
+    announce: '🔔｜announcement',
     svr: 'Lowkid 낮은아이 PH'
 }
 
@@ -50,6 +50,18 @@ bot.on('message', async message =>
         message.delete();
         confess.send(embed);
     }
+    if (command === 'announce') {
+        const confess = message.guild.channels.cache.find(confess => confess.name === settings.announce)
+        if(!confess) return;
+        mentionMessage = message.content.slice (8);
+        const embed = new MessageEmbed()
+        .setTitle(settings.svr)
+        .setColor('RANDOM')
+        .addField('Announcement', mentionMessage, true)
+        .setFooter('Copyright LWKD 2020', 'https://i.imgur.com/w0y9l7X.png');
+        message.delete();
+        confess.send(embed);
+    }
     
     if (command === 'slap') {
 
@@ -70,7 +82,7 @@ bot.on('message', async message =>
     }
 
     if (command === 'rainbow') {
-        const rolez = message.mentions.roles.first() || message.guild.roles.find(r=> r.name === args [0])
+        const rolez = message.mentions.roles.first() || message.guild.roles.find(r=> r.name === args)
         if(!rolez) return message.channel.send(ssettings.messageresponse.rolenotfound).catch(err=> message.channel.send("No response"))
         if(!message.guild.member(bot.user.id).hasPermission("MANAGE_ROLES")) return message.channel.send(ssettings.messageresponse.missingperm).catch(err=> message.channel.send("no response"))
         var colors = ssettings.rainbowrole

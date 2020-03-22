@@ -1,5 +1,6 @@
 
 const { Client, MessageEmbed } = require('discord.js');
+const settings = require("./your_settings.json")
 
 const bot = new Client();
 

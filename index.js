@@ -7,9 +7,8 @@ const bot = new Client();
 const settings = {
     prefix: '/',
     token: 'Njg2MDg2MDU4Njc2NDUzMzg1.XnVaww.tevCsvZZ1e26s6xcXNbSnKnRby4',
-    general: '🌸｜general-chat',
-    announce: '🔔｜announcement',
-    try: '682110743503437845',
+    general: '682110743503437845',
+    announce: '691109820903718993',
     //regans: '📕｜register-answers',
     svr: 'Lowkid 낮은아이 PH'
 }
@@ -19,7 +18,7 @@ bot.on('ready', () => {
 });
 
 bot.on('guildMemberAdd', member => {
-    const channel = member.guild.channels.cache.find(channel => channel.name === settings.general)
+    const channel = member.guild.channels.cache.find(channel => channel.id === settings.general)
     if(!channel) return;
 
     const embed = new MessageEmbed()
@@ -41,7 +40,7 @@ bot.on('message', async message =>
 
     // Confess
     if (command === 'confess') {
-        const confess = message.guild.channels.cache.find(confess => confess.id === settings.try)
+        const confess = message.guild.channels.cache.find(confess => confess.id === settings.general)
         if(!confess) return;
         mentionMessage = message.content.slice (8);
         const embed = new MessageEmbed()

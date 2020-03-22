@@ -72,7 +72,7 @@ bot.on('message', async message =>
         .setTitle(settings.svr)
         .setColor('RANDOM')
         .setDescription('Registration')
-        .addField('Username', `${member}`, true)
+        .addField('Username', message.author.user.tag, true)
         .setThumbnail(message.author.displayAvatarURL())
         .setFooter('Copyright LWKD 2020', 'https://i.imgur.com/w0y9l7X.png');
         message.delete();
@@ -84,7 +84,7 @@ bot.on('message', async message =>
         ans = message.content.slice (4);
         const embed = new MessageEmbed()
         .setTitle(settings.svr)
-        .setDescription(`${member}`)
+        .setDescription(message.author.user.tag)
         .setColor('RANDOM')
         .addField('Answer', ans, true)
         .setThumbnail(message.author.displayAvatarURL())

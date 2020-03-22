@@ -50,7 +50,7 @@ bot.on('message', async message =>
         message.delete();
         confess.send(embed);
     }
-    if (command === 'announce') {
+    if (command === 'cnn') {
         const confess = message.guild.channels.cache.find(confess => confess.name === settings.announce)
         if(!confess) return;
         mentionMessage = message.content.slice (8);

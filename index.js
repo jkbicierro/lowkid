@@ -81,13 +81,6 @@ bot.on('message', async message =>
             message.channel.send(ssettings.messageresponse.success).catch(err=> message.channel.send("No response"))
 
     }
-    if (command === 'rainbowstop') {
-            setTimeout(function () {
-           process.exit()
-            }, 1000);
-                       message.channel.send(ssettings.messageresponse.rainbowstop).catch(err=> message.channel.send("No response"))
-                       }
-    
     if (command === 'avatar') {
         var user;
         user = message.mentions.users.first(); 

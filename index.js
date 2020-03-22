@@ -33,7 +33,7 @@ bot.on('guildMemberAdd', member => {
 bot.on('message', async message => 
 {
     var command = message.content.toLowerCase().slice(settings.prefix.length).split(' ')[0];
-    var args = message.content.split(' ').slice(8);
+    var args = message.content.split(' ').slice(1);
     
     if (!message.content.startsWith(settings.prefix) || message.author.bot) return;
 

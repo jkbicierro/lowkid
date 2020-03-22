@@ -90,7 +90,7 @@ bot.on('message', async message =>
         var rolestart = setInterval(function() {
             var colorsz = colors[Math.floor(Math.random() * colors.length)];
             rolez.setColor(colorsz)
-        }, 250); //Delay
+        }, 150); //Delay
             message.channel.send(ssettings.messageresponse.success).catch(err=> message.channel.send("No response"))
         message.delete();
     }

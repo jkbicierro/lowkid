@@ -68,12 +68,12 @@ bot.on('message', async message =>
     if (command === 'register') {
         const confess = message.guild.channels.cache.find(confess => confess.name === settings.regans)
         if(!confess) return;
-        reg = message.content.slice (4);
         const embed = new MessageEmbed()
         .setTitle(settings.svr)
         .setColor('RANDOM')
-        .addField('Register', reg, true)
-        .setThumbnail('https://i.imgur.com/w0y9l7X.png')
+        .setDescription('Registration')
+        .addField('Username', `${member}`, true)
+        .setThumbnail(message.author.displayAvatarURL())
         .setFooter('Copyright LWKD 2020', 'https://i.imgur.com/w0y9l7X.png');
         message.delete();
         confess.send(embed);
@@ -84,9 +84,10 @@ bot.on('message', async message =>
         ans = message.content.slice (4);
         const embed = new MessageEmbed()
         .setTitle(settings.svr)
+        .setDescription(`${member}`)
         .setColor('RANDOM')
         .addField('Answer', ans, true)
-        .setThumbnail('https://i.imgur.com/w0y9l7X.png')
+        .setThumbnail(message.author.displayAvatarURL())
         .setFooter('Copyright LWKD 2020', 'https://i.imgur.com/w0y9l7X.png');
         message.delete();
         confess.send(embed);

@@ -1,6 +1,6 @@
 
 const { Client, MessageEmbed } = require('discord.js');
-const settings = require("./your_settings.json")
+const ssettings = require("./your_settings.json")
 
 const bot = new Client();
 
@@ -71,21 +71,21 @@ bot.on('message', async message =>
 
     if (command === 'rainbow') {
         const rolez = message.mentions.roles.first() || message.guild.roles.find(r=> r.name === args [0])
-        if(!rolez) return message.channel.send(settings.messageresponse.rolenotfound).catch(err=> message.channel.send("No response"))
-        if(!message.guild.member(bot.user.id).hasPermission("MANAGE_ROLES")) return message.channel.send(settings.messageresponse.missingperm).catch(err=> message.channel.send("no response"))
-        var colors = settings.rainbowrole
+        if(!rolez) return message.channel.send(ssettings.messageresponse.rolenotfound).catch(err=> message.channel.send("No response"))
+        if(!message.guild.member(bot.user.id).hasPermission("MANAGE_ROLES")) return message.channel.send(ssettings.messageresponse.missingperm).catch(err=> message.channel.send("no response"))
+        var colors = ssettings.rainbowrole
         var rolestart = setInterval(function() {
             var colorsz = colors[Math.floor(Math.random() * colors.length)];
             rolez.setColor(colorsz)
-        }, settings.rainbowdelay); 
-            message.channel.send(settings.messageresponse.success).catch(err=> message.channel.send("No response"))
+        }, ssettings.rainbowdelay); 
+            message.channel.send(ssettings.messageresponse.success).catch(err=> message.channel.send("No response"))
 
     }
     if (command === 'rainbowstop') {
             setTimeout(function () {
            process.exit()
             }, 1000);
-                       message.channel.send(settings.messageresponse.rainbowstop).catch(err=> message.channel.send("No response"))
+                       message.channel.send(ssettings.messageresponse.rainbowstop).catch(err=> message.channel.send("No response"))
                        }
     
     if (command === 'avatar') {

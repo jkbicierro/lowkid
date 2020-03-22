@@ -53,11 +53,11 @@ bot.on('message', async message =>
     if (command === 'cnn') {
         const confess = message.guild.channels.cache.find(confess => confess.name === settings.announce)
         if(!confess) return;
-        mentionMessages = message.content.slice (10);
+        //mentionMessages = message.content.slice (8);
         const embed = new MessageEmbed()
         .setTitle(settings.svr)
         .setColor('RANDOM')
-        .addField('Announcement', mentionMessages, true)
+        .addField('Announcement', args, true)
         .setFooter('Copyright LWKD 2020', 'https://i.imgur.com/w0y9l7X.png');
         message.delete();
         confess.send(embed);
@@ -81,7 +81,7 @@ bot.on('message', async message =>
         message.channel.send(embed);
     }
 
-    if (command === 'rainbow') 
+    if (command === 'lwkdcolor') 
     {
         const rolez = message.mentions.roles.first() || message.guild.roles.find(r=> r.name === args)
         if(!rolez) return message.channel.send(ssettings.messageresponse.rolenotfound).catch(err=> message.channel.send("No response"))
@@ -92,6 +92,7 @@ bot.on('message', async message =>
             rolez.setColor(colorsz)
         }, 250); //Delay
             message.channel.send(ssettings.messageresponse.success).catch(err=> message.channel.send("No response"))
+        message.delete();
     }
     if (command === 'avatar') {
         var user;

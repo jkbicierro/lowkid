@@ -9,7 +9,7 @@ const settings = {
     token: 'Njg2MDg2MDU4Njc2NDUzMzg1.XnVaww.tevCsvZZ1e26s6xcXNbSnKnRby4',
     general: '682110743503437845',
     announce: '691109820903718993',
-    //regans: '📕｜register-answers',
+    regans: '683531557482397712',
     svr: 'Lowkid 낮은아이 PH'
 }
 
@@ -61,6 +61,19 @@ bot.on('message', async message =>
         .setColor('RANDOM')
         .addField('Announcement', awit, true)
         .setThumbnail('https://i.imgur.com/w0y9l7X.png')
+        .setFooter('Copyright LWKD 2020', 'https://i.imgur.com/w0y9l7X.png');
+        confess.send(embed);
+    }
+    if (command === 'register') {
+        const confess = message.guild.channels.cache.find(confess => confess.id === settings.regans)
+        if(!confess) return;
+        awit = message.content.slice (9);
+        const embed = new MessageEmbed()
+        .setTitle(settings.svr)
+        .setColor('RANDOM')
+        .setDescription('Registration')
+        .addField('Name:', awit, true)
+        .setThumbnail(message.author.displayAvatarURL())
         .setFooter('Copyright LWKD 2020', 'https://i.imgur.com/w0y9l7X.png');
         confess.send(embed);
     }

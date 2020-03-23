@@ -67,10 +67,10 @@ bot.on('message', async message =>
     }
     if (command === 'amsg') 
     {
-        awit = message.content.slice (4);
+        mama = message.content.slice (4);
         const embed = new MessageEmbed()
         .setTitle(settings.svr)
-        .setDescription(awit)
+        .setDescription(mama)
         .setColor('RANDOM')
         .setThumbnail('https://i.imgur.com/w0y9l7X.png')
         .setFooter('Copyright LWKD 2020', 'https://i.imgur.com/w0y9l7X.png');

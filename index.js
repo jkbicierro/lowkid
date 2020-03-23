@@ -62,7 +62,6 @@ bot.on('message', async message =>
         .addField('Announcement', awit, true)
         .setThumbnail('https://i.imgur.com/w0y9l7X.png')
         .setFooter('Copyright LWKD 2020', 'https://i.imgur.com/w0y9l7X.png');
-        message.delete();
         confess.send(embed);
     }
     if (command === 'amsg') 
@@ -74,7 +73,6 @@ bot.on('message', async message =>
         .setColor('RANDOM')
         .setThumbnail('https://i.imgur.com/w0y9l7X.png')
         .setFooter('Copyright LWKD 2020', 'https://i.imgur.com/w0y9l7X.png');
-        message.delete();
         message.channel.send(embed);
     }
     if (command === 'slap') {
@@ -83,7 +81,6 @@ bot.on('message', async message =>
         .setAuthor(message.member.user.tag, message.author.displayAvatarURL(), '')
         .setImage('https://media.giphy.com/media/reXcrlJ3OhvDq/giphy.gif')
         .setFooter('Copyright LWKD 2020', 'https://i.imgur.com/w0y9l7X.png')
-        message.delete();
         message.channel.send(embed);
     }
     if (command === 'kiss') {
@@ -91,7 +88,6 @@ bot.on('message', async message =>
         .setAuthor(message.member.user.tag, message.author.displayAvatarURL(), '')
         .setImage('https://media.giphy.com/media/perRo4txxsFxe/giphy.gif')
         .setFooter('Copyright LWKD 2020', 'https://i.imgur.com/w0y9l7X.png')
-        message.delete();
         message.channel.send(embed);
     }
 
@@ -106,7 +102,6 @@ bot.on('message', async message =>
             rolez.setColor(colorsz)
         }, 180); //Delay
             message.channel.send(ssettings.messageresponse.success).catch(err=> message.channel.send("No response"))
-        message.delete();
     }
     if (command === 'avatar') {
         var user;
@@ -127,7 +122,6 @@ bot.on('message', async message =>
         else { 
             GetUserAvatar(user);
         }
-        message.delete();
     }
     function GetUserAvatar(user) {
         const embed = new MessageEmbed()

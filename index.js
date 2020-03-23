@@ -67,7 +67,7 @@ bot.on('message', async message =>
     }
     if (command === 'amsg') 
     {
-        mama = message.content.slice (4);
+        mama = message.content.slice (5);
         const embed = new MessageEmbed()
         .setTitle(settings.svr)
         .setDescription(mama)

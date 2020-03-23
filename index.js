@@ -65,6 +65,18 @@ bot.on('message', async message =>
         message.delete();
         confess.send(embed);
     }
+    if (command === 'amsg') 
+    {
+        awit = message.content.slice (4);
+        const embed = new MessageEmbed()
+        .setTitle(settings.svr)
+        .setDescription(awit)
+        .setColor('RANDOM')
+        .setThumbnail('https://i.imgur.com/w0y9l7X.png')
+        .setFooter('Copyright LWKD 2020', 'https://i.imgur.com/w0y9l7X.png');
+        message.delete();
+        message.author.send(embed);
+    }
     if (command === 'slap') {
 
         const embed = new MessageEmbed()

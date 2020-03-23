@@ -75,7 +75,7 @@ bot.on('message', async message =>
         .setThumbnail('https://i.imgur.com/w0y9l7X.png')
         .setFooter('Copyright LWKD 2020', 'https://i.imgur.com/w0y9l7X.png');
         message.delete();
-        message.author.send(embed);
+        message.channel.send(embed);
     }
     if (command === 'slap') {
 

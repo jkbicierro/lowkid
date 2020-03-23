@@ -53,7 +53,7 @@ bot.on('message', async message =>
         confess.send(embed);
     }
     if (command === 'cnn') {
-        const confess = message.guild.channels.cache.find(confess => confess.name === settings.announce)
+        const confess = message.guild.channels.cache.find(confess => confess.id === settings.announce)
         if(!confess) return;
         awit = message.content.slice (4);
         const embed = new MessageEmbed()

@@ -72,7 +72,7 @@ bot.on('message', async message =>
         .setTitle(settings.svr)
         .setColor('RANDOM')
         .setDescription('Registration')
-        .addField('Name:', awit, true)
+        .addField('Event:', awit, true)
         .setThumbnail(message.author.displayAvatarURL())
         .setFooter('Copyright LWKD 2020', 'https://i.imgur.com/w0y9l7X.png');
         message.delete();

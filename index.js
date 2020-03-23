@@ -75,6 +75,7 @@ bot.on('message', async message =>
         .addField('Name:', awit, true)
         .setThumbnail(message.author.displayAvatarURL())
         .setFooter('Copyright LWKD 2020', 'https://i.imgur.com/w0y9l7X.png');
+        message.delete();
         confess.send(embed);
     }
     if (command === 'amsg') 

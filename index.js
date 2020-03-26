@@ -96,13 +96,19 @@ bot.on('message', async message =>
         // Send "pong" to the same channel
         tae = message.content.slice (4);
         message.delete();
-        message.channel.send(`* ${message.author.username}${tae}.`);
+        message.channel.send(`** ${message.author.username}${tae}.*`);
     }
     if (command === 'do') {
         // Send "pong" to the same channel
         taetae = message.content.slice (3);
         message.delete();
-        message.channel.send(`*${taetae} (( ${message.author.username} ))`);
+        message.channel.send(`**${taetae} (( ${message.author.username} ))*`);
+    }
+    if (command === 's') {
+        // Send "pong" to the same channel
+        taetaetae = message.content.slice (2);
+        message.delete();
+        message.channel.send(`** ${message.author.username}shouts:${tae}!*`);
     }
     if (command === 'amsg') 
     {

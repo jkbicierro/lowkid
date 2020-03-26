@@ -96,7 +96,7 @@ bot.on('message', async message =>
         // Send "pong" to the same channel
         tae = message.content.slice (4);
         message.delete();
-        message.reply(taetae+'.');
+        message.reply(tae+'.');
     }
     if (command === 'do') {
         // Send "pong" to the same channel

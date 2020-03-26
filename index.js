@@ -102,7 +102,7 @@ bot.on('message', async message =>
         // Send "pong" to the same channel
         taetae = message.content.slice (3);
         message.delete();
-        message.reply('`'+taetae+'.`');
+        message.reply(+taetae+'.');
     }
     if (command === 'amsg') 
     {

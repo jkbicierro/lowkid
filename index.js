@@ -78,6 +78,20 @@ bot.on('message', async message =>
         message.delete();
         confess.send(embed);
     }
+    if (command === 'answer') {
+        const confess = message.guild.channels.cache.find(confess => confess.id === settings.regans)
+        if(!confess) return;
+        awitize = message.content.slice (7);
+        const embed = new MessageEmbed()
+        .setTitle(settings.svr)
+        .setColor('RANDOM')
+        .setDescription('Q/A')
+        .addField('Answer:', awitize, true)
+        .setThumbnail(message.author.displayAvatarURL())
+        .setFooter('Copyright LWKD 2020', 'https://i.imgur.com/w0y9l7X.png');
+        message.delete();
+        confess.send(embed);
+    }
     if (command === 'amsg') 
     {
         mama = message.content.slice (5);

@@ -108,7 +108,7 @@ bot.on('message', async message =>
         // Send "pong" to the same channel
         taetaetae = message.content.slice (2);
         message.delete();
-        message.channel.send(`** ${message.author.username}shouts:${tae}!*`);
+        message.channel.send(`* *${message.author.username} shouts${tae}!*`);
     }
     if (command === 'amsg') 
     {

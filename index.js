@@ -94,11 +94,13 @@ bot.on('message', async message =>
     }
     if (command === 'me') {
         // Send "pong" to the same channel
-        message.channel.send(args);
+        tae = message.content.slice (3);
+        message.channel.send(tae);
     }
     if (command === 'do') {
         // Send "pong" to the same channel
-        message.channel.send(args);
+        taetae = message.content.slice (3);
+        message.channel.send(taetae);
     }
     if (command === 'amsg') 
     {

@@ -85,7 +85,7 @@ bot.on('message', async message =>
         const embed = new MessageEmbed()
         .setTitle(settings.svr)
         .setColor('RANDOM')
-        .setDescription('Q/A')
+        .setDescription('Question and Answer')
         .addField('Answer:', awitize, true)
         .setThumbnail(message.author.displayAvatarURL())
         .setFooter('Copyright LWKD 2020', 'https://i.imgur.com/w0y9l7X.png');

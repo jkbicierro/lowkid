@@ -92,15 +92,17 @@ bot.on('message', async message =>
         message.delete();
         confess.send(embed);
     }
-    if (command === 'me') {
+    if (command === 'meh') {
         // Send "pong" to the same channel
-        tae = message.content.slice (3);
-        message.reply(taetae);
+        tae = message.content.slice (4);
+        message.delete();
+        message.reply(taetae+'.');
     }
     if (command === 'do') {
         // Send "pong" to the same channel
         taetae = message.content.slice (3);
-        message.reply(taetae);
+        message.delete();
+        message.reply(taetae+'.');
     }
     if (command === 'amsg') 
     {

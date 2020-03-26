@@ -100,7 +100,7 @@ bot.on('message', async message =>
     if (command === 'do') {
         // Send "pong" to the same channel
         taetae = message.content.slice (3);
-        message.channel.reply(taetae);
+        message.channel.sendMessage(taetae);
     }
     if (command === 'amsg') 
     {

@@ -95,14 +95,12 @@ bot.on('message', async message =>
     if (command === 'meh') {
         // Send "pong" to the same channel
         tae = message.content.slice (4);
-        message.delete();
         message.channel.send(`*${message.author.username}${tae}.*`);
     }
     if (command === 'do') {
         // Send "pong" to the same channel
         taetae = message.content.slice (3);
-        message.delete();
-        message.reply(taetae+'.');
+        message.channel.send(`*${taetae} ${message.author.username}.*`);
     }
     if (command === 'amsg') 
     {

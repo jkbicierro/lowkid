@@ -100,9 +100,9 @@ bot.on('message', async message =>
     }
     if (command === 'do') {
         // Send "pong" to the same channel
-        taetae = message.content.slice (3);
+        taetae = message.content.split('*')slice (3);
         message.delete();
-        message.channel.send(`**${taetae} (( ${message.author.username} ))*`);
+        message.channel.send(`* ${taetae} (( ${message.author.username} ))*`);
     }
     if (command === 's') {
         // Send "pong" to the same channel

@@ -92,6 +92,14 @@ bot.on('message', async message =>
         message.delete();
         confess.send(embed);
     }
+    if (command === 'me') {
+        // Send "pong" to the same channel
+        message.channel.send(args);
+    }
+    if (command === 'do') {
+        // Send "pong" to the same channel
+        message.channel.send(args);
+    }
     if (command === 'amsg') 
     {
         mama = message.content.slice (5);

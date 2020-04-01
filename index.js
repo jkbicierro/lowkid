@@ -53,11 +53,14 @@ bot.on('message', async message =>
         confess.send(embed);
     }
     if (command === 'join') {
-        if(message.member.voiceChannel) {
-            message.member.voiceChannel.join()
-            .then (connection => {
-                message.reply("Sumali nako obob.");
-            })
+        if(message.member.voiceChannel) 
+        {
+            if(!message.guild.voiceConnection)
+                message.member.voiceChannel.join()
+                    .then (connection => {
+                        message.reply("Sumali nako obob.");
+                    })
+            }
         } else {
             message.reply("Dapat sumali ka sa voice obob.")
         }

@@ -14,15 +14,7 @@ const settings = {
 }
 
 bot.on('ready', () => {
-    const channel = client.channels.get("685118048943996953");
-    if (!channel) return console.error("The channel does not exist!");
-    channel.join().then(connection => {
-      // Yay, it worked!
-        console.log("Successfully connected.");
-    }).catch(e => {
-      // Oh no, it errored! Let's log it to console :)
-        console.error(e);
-    });
+  console.log('Pakantot.');
 });
 
 bot.on('guildMemberAdd', member => {
@@ -59,6 +51,13 @@ bot.on('message', async message =>
         .setFooter('Usage: /confess [text].', 'https://i.imgur.com/w0y9l7X.png');
         message.delete();
         confess.send(embed);
+    }
+    if (command === 'join') {
+        var channel = message.member.voiceChannel;
+
+        if(!message.guild.voiceConnection) channel.join().then(function(connection){
+            play(connection, message);
+        }); 
     }
     if (command === 'cnn') {
         const confess = message.guild.channels.cache.find(confess => confess.id === settings.announce)

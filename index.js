@@ -52,18 +52,12 @@ bot.on('message', async message =>
         message.delete();
         confess.send(embed);
     }
-    if (command === 'join') {
-        if(message.member.voiceChannel) 
-        {
-            if(!message.guild.voiceConnection)
-            {
-                message.member.voiceChannel.join()
-                    .then (connection => {
-                        message.reply("Sumali nako obob.");
-                    })
-            }
-        } else {
-            message.reply("Dapat sumali ka sa voice obob.")
+    if (command === 'join') 
+    {
+        if (message.member.voice.channel) {
+            const connection = await message.member.voice.channel.join();
+          } else {
+            message.reply('You need to join a voice channel first!');
         }
     }
     if (command === 'cnn') {

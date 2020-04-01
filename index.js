@@ -52,7 +52,7 @@ bot.on('message', async message =>
         message.delete();
         confess.send(embed);
     }
-    if (command === 'join') 
+    if (command === 'ajoin') 
     {
         if (message.member.voice.channel) {
             const connection = await message.member.voice.channel.join();

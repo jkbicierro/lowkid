@@ -15,7 +15,7 @@ const settings = {
 
 bot.on('ready', () => {
     console.log('Pakantot.');
-    bot.user.setActivity('LWKD v0.5');
+    bot.user.setActivity('lowkid.com');
 });
 
 bot.on('guildMemberAdd', member => {

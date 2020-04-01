@@ -10,11 +10,12 @@ const settings = {
     general: '682110743503437845',
     announce: '691109820903718993',
     regans: '683531557482397712',
-    svr: 'Lowkid 낮은아이 PH'
+    svr: 'Lowkid 낮 PH'
 }
 
 bot.on('ready', () => {
-  console.log('Pakantot.');
+    console.log('Pakantot.');
+    bot.user.setActivity('LWKD v0.5');
 });
 
 bot.on('guildMemberAdd', member => {

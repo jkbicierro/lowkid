@@ -15,7 +15,7 @@ const settings = {
 
 bot.on('ready', () => {
     console.log('Pakantot.');
-    bot.user.setActivity('ʟᴏᴡᴋɪᴅ v0.0.8');
+    bot.user.setActivity('ʟᴏᴡᴋɪᴅ v0.0.9');
 });
 
 bot.on('guildMemberAdd', member => {
@@ -68,16 +68,28 @@ bot.on('message', async message =>
         message.channel.send(`Sorry, you already claimed your daily lowbucks!\nBut no worries, over ${output.timetowait} you can daily again!`)
         }
     }*/
-    if (command === 'fakegiveaway') {
+    if (command === 'fg') {
         var output = await eco.FetchBalance(message.author.id)
         const confess = message.guild.channels.cache.find(confess => confess.id === settings.announce)
         if(!confess) return;
-        awwe = message.content.slice (13);
+        awwe = message.content.slice (3);
         const embed = new MessageEmbed()
         .setTitle(awwe)
         .setColor('RANDOM')
         .addField('', 'React to enter', true)
         .addField('', 'Time remaining: 5hrs', true)
+        .setFooter('Copyright LWKD 2020', 'https://i.imgur.com/w0y9l7X.png');
+        confess.send(embed);
+    }
+    if (command === 'fgf') {
+        var output = await eco.FetchBalance(message.author.id)
+        const confess = message.guild.channels.cache.find(confess => confess.id === settings.announce)
+        if(!confess) return;
+        awwe = message.content.slice (4);
+        const embed = new MessageEmbed()
+        .setTitle('Giveaway Ended')
+        .setColor('RANDOM')
+        .addField('Lowkid Giveaway Winner:', awwe, true)
         .setFooter('Copyright LWKD 2020', 'https://i.imgur.com/w0y9l7X.png');
         confess.send(embed);
     }

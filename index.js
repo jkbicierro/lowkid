@@ -39,7 +39,17 @@ bot.on('message', async message =>
     
     if (!message.content.startsWith(settings.prefix) || message.author.bot) return;
 
-    
+    if (command === 'balance') {
+        //const confess = message.guild.channels.cache.find(confess => confess.id === settings.announce)
+        //if(!confess) return;
+        const embed = new MessageEmbed()
+        .setTitle(`${message.author.tag}`)
+        .setColor('RANDOM')
+        .addField('Balance', `${output.balance}`, true)
+        .setThumbnail('https://i.imgur.com/w0y9l7X.png')
+        .setFooter('Copyright LWKD 2020', 'https://i.imgur.com/w0y9l7X.png');
+        confess.send(embed);
+    }
     if (command === 'bal') {
         var output = await eco.FetchBalance(message.author.id)
         message.channel.send(`Hey ${message.author.tag}! You own ${output.balance} lowbucks.`);

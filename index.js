@@ -48,7 +48,7 @@ bot.on('message', async message =>
         .addField('Balance', `${output.balance}`, true)
         .setThumbnail('https://i.imgur.com/w0y9l7X.png')
         .setFooter('Copyright LWKD 2020', 'https://i.imgur.com/w0y9l7X.png');
-        confess.send(embed);
+        message.channel.send(embed);
     }
     if (command === 'bal') {
         var output = await eco.FetchBalance(message.author.id)

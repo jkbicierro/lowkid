@@ -40,6 +40,7 @@ bot.on('message', async message =>
     if (!message.content.startsWith(settings.prefix) || message.author.bot) return;
 
     if (command === 'balance') {
+        var output = await eco.FetchBalance(message.author.id)
         //const confess = message.guild.channels.cache.find(confess => confess.id === settings.announce)
         //if(!confess) return;
         const embed = new MessageEmbed()

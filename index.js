@@ -75,8 +75,7 @@ bot.on('message', async message =>
         const embed = new MessageEmbed()
         .setTitle(awwe)
         .setColor('RANDOM')
-        .addField('', 'React to enter', true)
-        .addField('', 'Time remaining: 5hrs', true)
+        .addField('React anything to enter', 'Time remaining: 5hrs', true)
         .setFooter('Copyright LWKD 2020', 'https://i.imgur.com/w0y9l7X.png');
         confess.send(embed);
     }

@@ -1,6 +1,6 @@
 
 const { Client, MessageEmbed } = require('discord.js');
-const eco = require("discord-economy");
+//const eco = require("discord-economy");
 
 const bot = new Client();
 
@@ -40,11 +40,10 @@ bot.on('message', async message =>
     if (!message.content.startsWith(settings.prefix) || message.author.bot) return;
 
     // Confess
-    if (command === 'balance') {
- 
+    /*if (command === 'balance') {
         var output = await eco.FetchBalance(message.author.id)
         message.channel.send(`Hey ${message.author.tag}! You own ${output.balance} coins.`);
-      }
+    }*/
     if (command === 'confess') {
         const confess = message.guild.channels.cache.find(confess => confess.id === settings.general)
         if(!confess) return;

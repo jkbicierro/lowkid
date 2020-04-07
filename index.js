@@ -75,7 +75,7 @@ bot.on('message', async message =>
         const embed = new MessageEmbed()
         .setTitle(awewe)
         .setColor('RANDOM')
-        .setDescription('React anything to enter giveaway');
+        .setDescription('React anything to enter giveaway')
         .setFooter('Copyright LWKD 2020', 'https://i.imgur.com/w0y9l7X.png');
         confess.send(embed);
     }

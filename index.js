@@ -1,6 +1,6 @@
 
 const { Client, MessageEmbed } = require('discord.js');
-const eco = require("discord-economy");
+//const eco = require("discord-economy");
 
 const bot = new Client();
 
@@ -39,7 +39,7 @@ bot.on('message', async message =>
     
     if (!message.content.startsWith(settings.prefix) || message.author.bot) return;
 
-    if (command === 'balance') {
+    /*if (command === 'balance') {
         var output = await eco.FetchBalance(message.author.id)
         //const confess = message.guild.channels.cache.find(confess => confess.id === settings.announce)
         //if(!confess) return;
@@ -67,8 +67,20 @@ bot.on('message', async message =>
         } else {
         message.channel.send(`Sorry, you already claimed your daily lowbucks!\nBut no worries, over ${output.timetowait} you can daily again!`)
         }
+    }*/
+    if (command === 'fakegiveaway') {
+        var output = await eco.FetchBalance(message.author.id)
+        const confess = message.guild.channels.cache.find(confess => confess.id === settings.announce)
+        if(!confess) return;
+        awwe = message.content.slice (13);
+        const embed = new MessageEmbed()
+        .setTitle(awwe)
+        .setColor('RANDOM')
+        .addField('', 'React to enter', true)
+        .addField('', 'Time remaining: 5hrs', true)
+        .setFooter('Copyright LWKD 2020', 'https://i.imgur.com/w0y9l7X.png');
+        confess.send(embed);
     }
-
     // Confess
     if (command === 'confess') {
         const confess = message.guild.channels.cache.find(confess => confess.id === settings.general)

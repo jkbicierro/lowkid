@@ -1,6 +1,6 @@
 
 const { Client, MessageEmbed } = require('discord.js');
-const ssettings = require("./your_settings.json")
+
 
 const bot = new Client();
 
@@ -101,18 +101,6 @@ bot.on('message', async message =>
         message.delete();
         confess.send(embed);
     }
-    if (command === 'meh') {
-        // Send "pong" to the same channel
-        tae = message.content.slice (4);
-        message.delete();
-        message.channel.send(`* *${message.author.username}${tae}.*`);
-    }
-    if (command === 's') {
-        // Send "pong" to the same channel
-        taetaetae = message.content.slice (2);
-        message.delete();
-        message.channel.send(`* *${message.author.username} shouts${taetaetae}!*`);
-    }
     if (command === 'amsg') 
     {
         mama = message.content.slice (5);
@@ -140,18 +128,6 @@ bot.on('message', async message =>
         message.channel.send(embed);
     }
 
-    if (command === 'lwkdcolor') 
-    {
-        const rolez = message.mentions.roles.first() || message.guild.roles.find(r=> r.name === args)
-        if(!rolez) return message.channel.send(ssettings.messageresponse.rolenotfound).catch(err=> message.channel.send("No response"))
-        if(!message.guild.member(bot.user.id).hasPermission("MANAGE_ROLES")) return message.channel.send(ssettings.messageresponse.missingperm).catch(err=> message.channel.send("no response"))
-        var colors = ssettings.rainbowrole
-        var rolestart = setInterval(function() {
-            var colorsz = colors[Math.floor(Math.random() * colors.length)];
-            rolez.setColor(colorsz)
-        }, 180); //Delay
-            message.channel.send(ssettings.messageresponse.success).catch(err=> message.channel.send("No response"))
-    }
     if (command === 'avatar') {
         var user;
         user = message.mentions.users.first(); 

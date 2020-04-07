@@ -6,7 +6,7 @@ const bot = new Client();
 
 const settings = {
     prefix: '/',
-    token: 'Njg2MDg2MDU4Njc2NDUzMzg1.XnVaww.tevCsvZZ1e26s6xcXNbSnKnRby4',
+    token: 'Njg2MDg2MDU4Njc2NDUzMzg1.Xovy_g.8_lIce-X5oGaZ-IZZWOf1e5Ww98',
     general: '682110743503437845',
     announce: '691109820903718993',
     regans: '683531557482397712',

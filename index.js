@@ -39,11 +39,26 @@ bot.on('message', async message =>
     
     if (!message.content.startsWith(settings.prefix) || message.author.bot) return;
 
-    // Confess
-    if (command === 'balance') {
+    
+    if (command === 'bal') {
         var output = await eco.FetchBalance(message.author.id)
-        message.channel.send(`Hey ${message.author.tag}! You own ${output.balance} coins.`);
+        message.channel.send(`Hey ${message.author.tag}! You own ${output.balance} lowbucks.`);
     }
+    if (command === 'daily') {
+    
+        var output = await eco.Daily(message.author.id)
+    
+        if (output.updated) {
+    
+        var profile = await eco.AddToBalance(message.author.id, 2) //lb
+        message.reply(`You claimed your daily lowbucks successfully! You now own ${profile.newbalance} lowbucks.`);
+    
+        } else {
+        message.channel.send(`Sorry, you already claimed your daily lowbucks!\nBut no worries, over ${output.timetowait} you can daily again!`)
+        }
+    }
+
+    // Confess
     if (command === 'confess') {
         const confess = message.guild.channels.cache.find(confess => confess.id === settings.general)
         if(!confess) return;

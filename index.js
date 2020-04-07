@@ -15,7 +15,7 @@ const settings = {
 
 bot.on('ready', () => {
     console.log('Pakantot.');
-    bot.user.setActivity('ʟᴏᴡᴋɪᴅ v0.0.7');
+    bot.user.setActivity('ʟᴏᴡᴋɪᴅ v0.0.8');
 });
 
 bot.on('guildMemberAdd', member => {

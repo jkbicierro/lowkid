@@ -15,7 +15,7 @@ const settings = {
 
 bot.on('ready', () => {
     console.log('Pakantot.');
-    bot.user.setActivity('ʟᴏᴡᴋɪᴅ v0.0.9');
+    bot.user.setActivity('ʟᴏᴡᴋɪᴅ v0.1.0');
 });
 
 bot.on('guildMemberAdd', member => {
@@ -69,7 +69,6 @@ bot.on('message', async message =>
         }
     }*/
     if (command === 'fg') {
-        var output = await eco.FetchBalance(message.author.id)
         const confess = message.guild.channels.cache.find(confess => confess.id === settings.announce)
         if(!confess) return;
         awwe = message.content.slice (3);
@@ -82,7 +81,6 @@ bot.on('message', async message =>
         confess.send(embed);
     }
     if (command === 'fgf') {
-        var output = await eco.FetchBalance(message.author.id)
         const confess = message.guild.channels.cache.find(confess => confess.id === settings.announce)
         if(!confess) return;
         awwe = message.content.slice (4);

@@ -71,9 +71,9 @@ bot.on('message', async message =>
     if (command === 'fg') {
         const confess = message.guild.channels.cache.find(confess => confess.id === settings.announce)
         if(!confess) return;
-        awwe = message.content.slice (3);
+        awewe = message.content.slice (3);
         const embed = new MessageEmbed()
-        .setTitle(awwe)
+        .setTitle(awewe)
         .setColor('RANDOM')
         .addField('React anything to enter', 'Time remaining: 5hrs', true)
         .setFooter('Copyright LWKD 2020', 'https://i.imgur.com/w0y9l7X.png');

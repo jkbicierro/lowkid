@@ -3,19 +3,20 @@ const { Client, MessageEmbed } = require('discord.js');
 //const eco = require("discord-economy");
 
 const bot = new Client();
-
 const settings = {
     prefix: '/',
-    token: 'Njg2MDg2MDU4Njc2NDUzMzg1.Xovy_g.8_lIce-X5oGaZ-IZZWOf1e5Ww98',
-    general: '682110743503437845',
-    announce: '691109820903718993',
-    regans: '683531557482397712',
-    svr: 'Lowkid 낮 PH'
+    token: 'NzAxNDE4NTc5NzAyMzE3MDk3.Xp0mGg.XUWXq7dEBTVatvHuQ1SY2BvhrYQ',
+    general: '686135103952519168',
+    announce: '686135103952519168',
+    regans: '686135103952519168',
+    familyemoji: '❒',
+    turfs: '686086586642989148',
+    svr: 'Lowkid Dev'
 }
 
 bot.on('ready', () => {
     console.log('Pakantot.');
-    bot.user.setActivity('ʟᴏᴡᴋɪᴅ v0.1.2');
+    bot.user.setActivity('ʟᴏᴡᴋɪᴅ Families Test');
 });
 
 bot.on('guildMemberAdd', member => {
@@ -199,6 +200,28 @@ bot.on('message', async message =>
             GetUserAvatar(user);
         }
     }
+    if (command === 'families') {
+        var embedlist = "";
+        const linebreak = "\n";
+        const separator = " | Members: "
+        message.guild.roles.fetch().then(roles => {
+            roles.cache.forEach((current_role) => {
+                if (current_role.name.includes(settings.familyemoji)) {
+                    embedlist = embedlist.concat(current_role.name, separator, current_role.members.size, linebreak);
+                }
+            })
+        })
+        .catch(error => console.log(error))
+        setTimeout(() => {
+            const embed = new MessageEmbed()
+            .setTitle(settings.svr)
+            .setColor('RANDOM')
+            .addField("Families", embedlist, false)
+            .setFooter('Copyright LWKD 2020', 'https://i.imgur.com/w0y9l7X.png')
+            message.channel.send(embed);
+        }, 500);
+    }
+
     function GetUserAvatar(user) {
         const embed = new MessageEmbed()
         .setTitle(settings.svr)

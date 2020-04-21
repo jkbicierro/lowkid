@@ -25,16 +25,15 @@ bot.on('guildMemberAdd', member => { // user
     .setAuthor(`${member.user.tag}`, member.user.displayAvatarURL())
     .setThumbnail(member.user.displayAvatarURL())
     .setColor(settings.svrclr)
-    //.setFooter(settings.copyright, 'https://i.imgur.com/w0y9l7X.png')
     .setDescription(`Welcome to **Lowkid**, ${member}. *this server is for people to socialize, and interests such as **anime, manga, games, art, and more** to be shared as one!*`);
-    //channel.send(embed);
-    const emoji = member.guild.emojis.cache.find(emoji => emoji.name === 'lowkid2');
-    const emoji1 = member.guild.emojis.cache.find(emoji => emoji.name === 'nani');
-    channel.send({embed: embed}).then(embedMessage => {
-        embedMessage.react(emoji);
-        embedMessage.react(emoji1);
-    });
 
+    const lwkd = bot.emojis.cache.find(emoji => emoji.name === 'lowkid2');
+    const emoji1 = bot.emojis.cache.find(emoji => emoji.name === 'nani');
+    const aaawsa = bot.channels.cache.find(aaawsa => aaawsa.id === settings.general)
+    aaawsa.send("@Ping",embed).then(async embedMessage => {
+        await embedMessage.react(lwkd);
+        await embedMessage.react(emoji1);
+    });
 });
 
 bot.on('message', async message =>  //author

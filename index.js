@@ -88,7 +88,7 @@ bot.on('message', async message =>  //author
         .setColor(settings.svrclr)
         const confess = bot.channels.cache.find(confess => confess.id === '701441730112651274')
         const lwkd = message.guild.emojis.cache.find(emoji => emoji.name === 'lowkid2');
-        confess.send({embed: embed}).then(embedMessage => {
+        message.channel.send({embed: embed}).then(embedMessage => {
             embedMessage.react(lwkd);
             embedMessage.react("📧");
         });

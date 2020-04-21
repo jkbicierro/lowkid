@@ -10,15 +10,36 @@ const settings = {
     announce: '686135103952519168',
     regans: '686135103952519168',
     familyemoji: '❒',
-    turfs: '686086586642989148',
-    svr: 'Lowkid Dev'
+    turfs: '686086586642989148', // turfs category, not channel
+    svr: 'lay low bakla supot'
 }
 
 bot.on('ready', () => {
     console.log('Pakantot.');
     bot.user.setActivity('ʟᴏᴡᴋɪᴅ Families Test');
+    //setInterval(secondTimer, 1000);
 });
+function secondTimer() {
+    var date = new Date();
 
+    //get all voice channels of turf category
+    const category = bot.channels.cache.find(category => category.id === settings.turfs);
+    var channels = category.children;
+    //check each channel
+    channels.forEach((current_channel) => {
+        // check time if 20:00(8pm) and during the first minute (8:00 and ends on 8:01)
+        if(date.getHours() === 21 && date.getMinutes() === 40) {
+            //open the channels
+            if(!current_channel.permissionsFor(current_channel.guild.roles.everyone).has("CONNECT"))
+                current_channel.updateOverwrite(current_channel.guild.roles.everyone, { CONNECT: true });
+        }
+        else {
+            //close the channels
+            if(current_channel.permissionsFor(current_channel.guild.roles.everyone).has("CONNECT"))
+                current_channel.updateOverwrite(current_channel.guild.roles.everyone, { CONNECT: false });
+        }
+    });
+}
 bot.on('guildMemberAdd', member => {
     const channel = member.guild.channels.cache.find(channel => channel.id === settings.general)
     if(!channel) return;
@@ -93,16 +114,26 @@ bot.on('message', async message =>
     }
     // Confess
     if (command === 'confess') {
-        const confess = message.guild.channels.cache.find(confess => confess.id === settings.general)
-        if(!confess) return;
-        mentionMessage = message.content.slice (8);
+        params = message.content.slice (8);
+        
+        if(!params || params.length === 0) {
+            const usageembed = new MessageEmbed()
+            .setTitle(settings.svr)
+            .setColor('RANDOM')
+            .addField('Usage:', '/confess [text]', true)
+            .setThumbnail('https://i.imgur.com/w0y9l7X.png')
+            .setFooter('Copyright LWKD 2020', 'https://i.imgur.com/w0y9l7X.png');
+            message.reply(usageembed);
+            return;
+        }
         const embed = new MessageEmbed()
         .setTitle(settings.svr)
         .setColor('RANDOM')
-        .addField('Anonymous', mentionMessage, true)
+        .addField('Anonymous', params, true)
         .setThumbnail('https://i.imgur.com/w0y9l7X.png')
         .setFooter('Usage: /confess [text].', 'https://i.imgur.com/w0y9l7X.png');
-        message.delete();
+        //message.delete();
+        const confess = bot.channels.cache.find(confess => confess.id === settings.general)
         confess.send(embed);
     }
     if (command === 'ajoin') 
@@ -222,6 +253,24 @@ bot.on('message', async message =>
         }, 500);
     }
 
+    if(command === 'testopen') {
+        const category = bot.channels.cache.find(category => category.id === settings.turfs);
+        var channels = category.children;
+
+        channels.forEach((current_channel) => {
+            if(!current_channel.permissionsFor(current_channel.guild.roles.everyone).has("CONNECT"))
+                current_channel.updateOverwrite(current_channel.guild.roles.everyone, { CONNECT: true });
+        });
+    }
+    if(command === 'testclose') {
+        const category = bot.channels.cache.find(category => category.id === settings.turfs);
+        var channels = category.children;
+        channels.forEach((current_channel) => {
+            if(current_channel.permissionsFor(current_channel.guild.roles.everyone).has("CONNECT"))
+                current_channel.updateOverwrite(current_channel.guild.roles.everyone, { CONNECT: false });
+        });
+    }
+    
     function GetUserAvatar(user) {
         const embed = new MessageEmbed()
         .setTitle(settings.svr)

@@ -1,7 +1,7 @@
 const { Client, MessageEmbed } = require('discord.js');
 const eco = require("discord-economy");
 
-const bot = new Client();
+const bot = new Client({disableEveryone: False});
 
 const settings = {
     prefix: '/',
@@ -139,8 +139,6 @@ bot.on('message', async message =>  //author
         .addField('💰 500 Pesos Load', '+$600,000', false)
         .addField('💰 Nitro Classic', '+$350,000', false)
         .addField('💰 Discord Nitro', '+$600,000', false)
-
-
         message.channel.send(embed);
     }
     if (command === 'suggest') 
@@ -171,6 +169,7 @@ bot.on('message', async message =>  //author
         .setColor(settings.svrclr)
         //.setFooter(settings.copyright, 'https://i.imgur.com/w0y9l7X.png');
         message.channel.send(embed);
+        message.channel.send("@everyone");
     }
     if (command === 'slap') {
 

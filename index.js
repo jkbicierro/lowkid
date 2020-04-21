@@ -15,7 +15,7 @@ const settings = {
 
 bot.on('ready', async message => {
     console.log('Pakantot.');
-    bot.user.setActivity('Lowkid v0.1.5');
+    bot.user.setActivity('Lowkid v0.1.9');
 });
 
 bot.on('guildMemberAdd', member => { // user
@@ -153,8 +153,8 @@ bot.on('message', async message =>  //author
         const emoji = message.guild.emojis.cache.find(emoji => emoji.name === 'check');
         const emoji1 = message.guild.emojis.cache.find(emoji => emoji.name === 'ekis');
         const emoji2 = message.guild.emojis.cache.find(emoji => emoji.name === 'lowkid2');
-        const suggest = bot.channels.cache.find(suggest => suggest.id === '699895210431348836')
-        suggest.send({embed: embed}).then(embedMessage => {
+        const suggest22 = bot.channels.cache.find(suggest22 => suggest22.id === '699895210431348836')
+        suggest22.send({embed: embed}).then(embedMessage => {
             embedMessage.react(emoji2);
             embedMessage.react(emoji);
             embedMessage.react(emoji1);

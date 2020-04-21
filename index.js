@@ -104,15 +104,21 @@ bot.on('message', async message =>  //author
         }
     }
     if (command === 'ann') {
-        const confess = bot.channels.cache.find(confess => confess.id === settings.announce)
-        if(!confess) return;
+  
         awit = message.content.slice (4);
         const embed = new MessageEmbed()
         .setAuthor(message.author.tag, message.author.displayAvatarURL())
         .setDescription(awit)
         .setColor(settings.svrclr)
         //.setFooter(settings.copyright, 'https://i.imgur.com/w0y9l7X.png');
-        confess.send(embed);
+        
+        const lwkd = bot.emojis.cache.find(emoji => emoji.name === 'lowkid2');
+        const aaawsa = bot.channels.cache.find(aaawsa => aaawsa.id === settings.announce)
+        aaawsa.send(embed).then(async embedMessage => {
+            await embedMessage.react(lwkd);
+            await embedMessage.react('📢');
+        });
+        message.react("👍")
     }
 
     if (command === 'info') {
@@ -168,7 +174,7 @@ bot.on('message', async message =>  //author
         .setDescription(mama)
         .setColor(settings.svrclr)
         //.setFooter(settings.copyright, 'https://i.imgur.com/w0y9l7X.png');
-        message.channel.send("@everyone",embed);
+        message.channel.send(embed);
     }
     if (command === 'slap') {
 

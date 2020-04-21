@@ -1,7 +1,7 @@
 const { Client, MessageEmbed } = require('discord.js');
 const eco = require("discord-economy");
 
-const bot = new Client({disableEveryone: False});
+const bot = new Client();
 
 const settings = {
     prefix: '/',
@@ -168,7 +168,7 @@ bot.on('message', async message =>  //author
         .setDescription(mama)
         .setColor(settings.svrclr)
         //.setFooter(settings.copyright, 'https://i.imgur.com/w0y9l7X.png');
-        message.channel.send(embed);
+        message.channel.send("@everyone",embed);
     }
     if (command === 'slap') {
 

@@ -113,7 +113,7 @@ bot.on('message', async message =>  //author
         
         const lwkd = bot.emojis.cache.find(emoji => emoji.name === 'lowkid2');
         const aaawsa = bot.channels.cache.find(aaawsa => aaawsa.id === settings.announce)
-        aaawsa.send(embed).then(async embedMessage => {
+        aaawsa.send("@everyone",embed).then(async embedMessage => {
             await embedMessage.react(lwkd);
             await embedMessage.react('📢');
         });

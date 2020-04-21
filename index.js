@@ -15,7 +15,7 @@ const settings = {
 
 bot.on('ready', async message => {
     console.log('Pakantot.');
-    bot.user.setActivity('Lowkid v0.2.3');
+    bot.user.setActivity('Lowkid v0.2.4');
 });
 
 bot.on('guildMemberAdd', member => { // user
@@ -168,8 +168,7 @@ bot.on('message', async message =>  //author
         .setDescription(mama)
         .setColor(settings.svrclr)
         //.setFooter(settings.copyright, 'https://i.imgur.com/w0y9l7X.png');
-        message.channel.send(embed);
-        message.channel.send("@everyone");
+        message.channel.send("@everyone",embed);
     }
     if (command === 'slap') {
 

@@ -168,7 +168,7 @@ bot.on('message', async message =>  //author
         .setDescription(mama)
         .setColor(settings.svrclr)
         //.setFooter(settings.copyright, 'https://i.imgur.com/w0y9l7X.png');
-        message.channel.send("@everyone",embed);
+        message.channel.send(embed);
     }
     if (command === 'slap') {
 

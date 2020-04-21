@@ -30,7 +30,7 @@ bot.on('guildMemberAdd', member => { // user
     const lwkd = bot.emojis.cache.find(emoji => emoji.name === 'lowkid2');
     const emoji1 = bot.emojis.cache.find(emoji => emoji.name === 'nani');
     const aaawsa = bot.channels.cache.find(aaawsa => aaawsa.id === settings.general)
-    aaawsa.send("@Ping",embed).then(async embedMessage => {
+    aaawsa.send(embed).then(async embedMessage => {
         await embedMessage.react(lwkd);
         await embedMessage.react(emoji1);
     });

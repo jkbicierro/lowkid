@@ -15,7 +15,7 @@ const settings = {
 
 bot.on('ready', async message => {
     console.log('Pakantot.');
-    bot.user.setActivity('Lowkid v0.1.2');
+    bot.user.setActivity('Lowkid v0.1.5');
 });
 
 bot.on('guildMemberAdd', member => { // user

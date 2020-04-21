@@ -15,7 +15,7 @@ const settings = {
 
 bot.on('ready', async message => {
     console.log('Pakantot.');
-    bot.user.setActivity('Lowkid v0.1.9');
+    bot.user.setActivity('Lowkid v0.2.1');
 });
 
 bot.on('guildMemberAdd', member => { // user
@@ -154,11 +154,11 @@ bot.on('message', async message =>  //author
         const emoji1 = message.guild.emojis.cache.find(emoji => emoji.name === 'ekis');
         const emoji2 = message.guild.emojis.cache.find(emoji => emoji.name === 'lowkid2');
         const aaawsa = bot.channels.cache.find(aaawsa => aaawsa.id === '699895210431348836')
-        aaawsa.send({embed: embed}).then(embedMessage => {
-            embedMessage.react(emoji2);
-            embedMessage.react(emoji);
-            embedMessage.react(emoji1);
-            embedMessage.react("📪");
+        aaawsa.send(embed).then(async embedMessage => {
+            await embedMessage.react(emoji2);
+            await embedMessage.react(emoji);
+            await embedMessage.react(emoji1);
+            await embedMessage.react('📪');
         });
     }
     

@@ -147,14 +147,13 @@ bot.on('message', async message =>  //author
         .setAuthor(`Suggested by ${message.author.tag}`, message.author.displayAvatarURL())
         .setDescription(suggest)
         .setColor(settings.svrclr)
-        //.setFooter(settings.copyright, 'https://i.imgur.com/w0y9l7X.png');
         message.react("👍")
         const emoji = message.guild.emojis.cache.find(emoji => emoji.name === '6093_Animated_Checkmark');
         const emoji1 = message.guild.emojis.cache.find(emoji => emoji.name === 'ekis');
-        //const emoji2 = message.guild.emojis.cache.find(emoji => emoji.name === 'lowkid2');
-	    //message.react(emoji);
-        message.channel.send({embed: embed}).then(embedMessage => {
-            //embedMessage.react(emoji2);
+        const emoji2 = message.guild.emojis.cache.find(emoji => emoji.name === 'lowkid2');
+        const suggest = bot.channels.cache.find(suggest => suggest.id === '701441730112651274')
+        suggest.send({embed: embed}).then(embedMessage => {
+            embedMessage.react(emoji2);
             embedMessage.react(emoji);
             embedMessage.react(emoji1);
             embedMessage.react("📪");

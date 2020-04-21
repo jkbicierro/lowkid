@@ -86,10 +86,12 @@ bot.on('message', async message =>  //author
         }
         const embed = new MessageEmbed()
         .setColor(settings.svrclr)
-        .setDescription(`**Anonymous**\n${params}`)
-        //.setFooter(settings.copyright, 'https://i.imgur.com/w0y9l7X.png');
         const confess = bot.channels.cache.find(confess => confess.id === '701441730112651274')
-        confess.send(embed);
+        const lwkd = message.guild.emojis.cache.find(emoji => emoji.name === 'lowkid2');
+        confess.send({embed: embed}).then(embedMessage => {
+            embedMessage.react(lwkd);
+            embedMessage.react("📧");
+        });
         message.react("👍")
     }
     if (command === 'ajoin') 

@@ -153,8 +153,8 @@ bot.on('message', async message =>  //author
         const emoji = message.guild.emojis.cache.find(emoji => emoji.name === 'check');
         const emoji1 = message.guild.emojis.cache.find(emoji => emoji.name === 'ekis');
         const emoji2 = message.guild.emojis.cache.find(emoji => emoji.name === 'lowkid2');
-        const suggest22 = bot.channels.cache.find(suggest22 => suggest22.id === '699895210431348836')
-        suggest22.send({embed: embed}).then(embedMessage => {
+        const aaawsa = bot.channels.cache.find(aaawsa => aaawsa.id === '699895210431348836')
+        aaawsa.send({embed: embed}).then(embedMessage => {
             embedMessage.react(emoji2);
             embedMessage.react(emoji);
             embedMessage.react(emoji1);

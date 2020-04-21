@@ -127,6 +127,7 @@ bot.on('message', async message =>  //author
         .setColor(settings.svrclr)
         .setDescription('**Discord:** *https://www.discord.io/lowkid/*\n**Website:** *https://www.ezire.ph/*\n**Facebook:** *https://www.facebook.com/lowkidapprel/*\n**Instagram:** *https://www.instagram.com/Lowkidapparel/*')
         message.channel.send(embed);
+        message.react("👍")
     }
 
     if (command === 'sponsor') {
@@ -146,6 +147,7 @@ bot.on('message', async message =>  //author
         .addField('💰 Nitro Classic', '+$350,000', false)
         .addField('💰 Discord Nitro', '+$600,000', false)
         message.channel.send(embed);
+        message.react("👍")
     }
     if (command === 'suggest') 
     {
@@ -175,6 +177,7 @@ bot.on('message', async message =>  //author
         .setColor(settings.svrclr)
         //.setFooter(settings.copyright, 'https://i.imgur.com/w0y9l7X.png');
         message.channel.send(embed);
+        message.react("👍")
     }
     if (command === 'slap') {
 

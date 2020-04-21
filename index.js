@@ -151,7 +151,7 @@ bot.on('message', async message =>  //author
         const emoji = message.guild.emojis.cache.find(emoji => emoji.name === '6093_Animated_Checkmark');
         const emoji1 = message.guild.emojis.cache.find(emoji => emoji.name === 'ekis');
         const emoji2 = message.guild.emojis.cache.find(emoji => emoji.name === 'lowkid2');
-        const suggest = bot.channels.cache.find(suggest => suggest.id === '701441730112651274')
+        const suggest = bot.channels.cache.find(suggest => suggest.id === '699895210431348836')
         suggest.send({embed: embed}).then(embedMessage => {
             embedMessage.react(emoji2);
             embedMessage.react(emoji);

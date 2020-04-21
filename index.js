@@ -28,8 +28,8 @@ bot.on('guildMemberAdd', member => { // user
     //.setFooter(settings.copyright, 'https://i.imgur.com/w0y9l7X.png')
     .setDescription(`Welcome to **Lowkid**, ${member}. *this server is for people to socialize, and interests such as **anime, manga, games, art, and more** to be shared as one!*`);
     //channel.send(embed);
-    const emoji = member.guild.emojis.cache.find(emoji => emoji.name === 'welcome');
-    const emoji1 = member.guild.emojis.cache.find(emoji => emoji.name === 'welcome1');
+    const emoji = member.guild.emojis.cache.find(emoji => emoji.name === 'lowkid2');
+    const emoji1 = member.guild.emojis.cache.find(emoji => emoji.name === 'nani');
     channel.send({embed: embed}).then(embedMessage => {
         embedMessage.react(emoji);
         embedMessage.react(emoji1);
@@ -148,7 +148,7 @@ bot.on('message', async message =>  //author
         .setDescription(suggest)
         .setColor(settings.svrclr)
         message.react("👍")
-        const emoji = message.guild.emojis.cache.find(emoji => emoji.name === '6093_Animated_Checkmark');
+        const emoji = message.guild.emojis.cache.find(emoji => emoji.name === 'check');
         const emoji1 = message.guild.emojis.cache.find(emoji => emoji.name === 'ekis');
         const emoji2 = message.guild.emojis.cache.find(emoji => emoji.name === 'lowkid2');
         const suggest = bot.channels.cache.find(suggest => suggest.id === '699895210431348836')

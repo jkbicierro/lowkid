@@ -1,7 +1,6 @@
 
 const { Client, MessageEmbed } = require('discord.js');
 //const eco = require("discord-economy");
-
 const bot = new Client();
 const settings = {
     prefix: '/',
@@ -11,7 +10,7 @@ const settings = {
     regans: '686135103952519168',
     familyemoji: '❒',
     turfs: '686086586642989148', // turfs category, not channel
-    svr: 'lay low bakla supot'
+    svr: 'Lowkid'
 }
 
 bot.on('ready', () => {
@@ -19,6 +18,63 @@ bot.on('ready', () => {
     bot.user.setActivity('ʟᴏᴡᴋɪᴅ Families Test');
     //setInterval(secondTimer, 1000);
 });
+var Guild;
+bot.on("guildCreate", guild => {
+    Guild = guild;
+});
+function Create2DArray(rows) {
+    var arr = [];
+  
+    for (var i=0;i<rows;i++) {
+       arr[i] = [];
+    }
+  
+    return arr;
+}
+var counting = false; // to count members of turf channel
+var usersInChannel = Create2DArray(50); // make sure to clear the values after counting (in case of new and deleted fams)
+function countMembers() {
+    const category = bot.channels.cache.find(category => category.id === settings.turfs);
+    var channels = category.children;
+    var i = 0; // iterator for channels
+    channels.forEach((current_channel) => {
+        Guild.roles.fetch().then(roles => {
+            var x = 0; // iterator for currentrole
+            roles.cache.forEach((current_role) => {
+                if (current_role.name.includes(settings.familyemoji)) {
+                    usersInChannel[i][x] = 0;
+                    current_role.members.forEach((current_member) => {
+                        if(current_member.voice.channelID === current_channel.id) {
+                            // this member is in the current_channel
+                            usersInChannel[i][x]++;
+                        }
+                    });
+                    x++;
+                }
+            })
+        });
+        i++;
+    });
+    setTimeout(() => {
+        i = 0; // reset iterator
+        channels.forEach((current_channel) => {
+            Guild.roles.fetch().then(roles => {
+                x = 0; //reset also
+                roles.cache.forEach((current_role) => {
+                    if (current_role.name.includes(settings.familyemoji)) {
+                        //var maxRow = usersInChannel.map(function(row){ return Math.max.apply(Math, row); });
+                        if(Math.max.apply(null, usersInChannel[i]) === usersInChannel[i][x]) {
+                            // then this is the winner
+
+                        }
+                        x++;
+                    }
+                });
+            });
+            i++;
+        });
+    }, 2000);
+}
 function secondTimer() {
     var date = new Date();
 
@@ -28,15 +84,24 @@ function secondTimer() {
     //check each channel
     channels.forEach((current_channel) => {
         // check time if 20:00(8pm) and during the first minute (8:00 and ends on 8:01)
-        if(date.getHours() === 21 && date.getMinutes() === 40) {
+        if(date.getHours() === 20 && date.getMinutes() < 10) {
             //open the channels
             if(!current_channel.permissionsFor(current_channel.guild.roles.everyone).has("CONNECT"))
                 current_channel.updateOverwrite(current_channel.guild.roles.everyone, { CONNECT: true });
+            
+            // if ending then start count
+            if(date.getMinutes === 9 && date.getSeconds() >= 58 && !counting) {
+                counting = true;
+                countMembers();
+            }
         }
         else {
             //close the channels
             if(current_channel.permissionsFor(current_channel.guild.roles.everyone).has("CONNECT"))
                 current_channel.updateOverwrite(current_channel.guild.roles.everyone, { CONNECT: false });
+
+            if(counting)
+                counting = false;
         }
     });
 }
@@ -53,12 +118,11 @@ bot.on('guildMemberAdd', member => {
     .setDescription('Welcome to Lowkid, this server is for people to socialize, and interests such as anime, manga, games, art, and more to be shared as one!');
     channel.send(embed);
 });
-
 bot.on('message', async message => 
 {
     var command = message.content.toLowerCase().slice(settings.prefix.length).split(' ')[0];
     var args = message.content.split(' ').slice(1);
-    
+    Guild = message.guild;
     if (!message.content.startsWith(settings.prefix) || message.author.bot) return;
 
     /*if (command === 'balance') {
@@ -270,7 +334,24 @@ bot.on('message', async message =>
                 current_channel.updateOverwrite(current_channel.guild.roles.everyone, { CONNECT: false });
         });
     }
-    
+    if(command === 'ee') {
+        countMembers();
+        setTimeout(() => {
+            var max = usersInChannel[0].reduce(function(a, b) {
+                return Math.max(a, b);
+            });
+            message.reply(max);
+        }, 500);
+    }
+    if(command === 'aa') {
+        countMembers();
+        setTimeout(() => {
+            var max = usersInChannel[1].reduce(function(a, b) {
+                return Math.max(a, b);
+            });
+            message.reply(max);
+        }, 500);
+    }
     function GetUserAvatar(user) {
         const embed = new MessageEmbed()
         .setTitle(settings.svr)

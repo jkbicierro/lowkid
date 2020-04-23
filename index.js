@@ -10,6 +10,7 @@ const settings = {
     announce: '691109820903718993', // Channel ID
     copyright: '© ᴸᵂᴷᴰ 2020',
     svrclr: '#f08080',
+    familyemoji: '❒',
     svr: 'Lowkid 낮 PH'
 }
 

@@ -233,7 +233,7 @@ bot.on('message', async message =>  //author
         message.guild.roles.fetch().then(roles => {
             roles.cache.forEach((current_role) => {
                 if (current_role.name.includes(settings.familyemoji)) {
-                    embed.addField(current_role.name, '`Members: ' + current_role.members.size + ' | Leader: nizepogi`', false);
+                    embed.addField(current_role.name, '`Members: ' + current_role.members.size + ' | Leader: Lowkid`', false);
                 }
             })
         })

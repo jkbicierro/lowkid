@@ -11,14 +11,124 @@ const settings = {
     copyright: '© ᴸᵂᴷᴰ 2020',
     svrclr: '#f08080',
     familyemoji: '❒',
+    turfs: '696550521313558568', // category id
+    turflogs: '702806543002763324', // channel id
+    familiesrole: '682438247506378760', // role id
     svr: 'Lowkid 낮 PH'
 }
 
 bot.on('ready', async message => {
     console.log('Pakantot.');
-    bot.user.setActivity('Lowkid v0.3.1');
+    bot.user.setActivity('Lowkid v0.3.2');
+    setInterval(secondTimer, 1000);
+    counting = false;
 });
+var announced = false;
+var counting = false; // to count members of turf channel
+function countMembers() {
+    const turfcategory = bot.channels.cache.find(category => category.id === settings.turfs);
+    var turfs = turfcategory.children;
+    turfs.forEach((current_channel) => {
+        if(current_channel.members.size != 0 && current_channel.type === 'voice') {
+            current_channel.guild.roles.fetch().then(roles => {
+                var i = 0; // iterator for roles
+                var highest = 0;
+                var highestrole_id;
+                var tie = false;
+                roles.cache.forEach((current_role) => {
+                    if (current_role.name.includes(settings.familyemoji)) {
+                        var usersInChannel = 0;
+                        current_role.members.forEach((current_member) => {
+                            if(current_member.voice.channelID === current_channel.id) {
+                                // this member is in the current_channel
+                                usersInChannel++;
+                            }
+                        });
+                        if(usersInChannel === highest) {
+                            tie = true;
+                        }
+                        if(usersInChannel > highest){
+                            highest = usersInChannel;
+                            highestrole_id = current_role.id;
+                        }
+                        i++;
+                    }
+                })
+                if(highest > 0 && tie === false) {
+                    current_channel.guild.roles.fetch(highestrole_id.toString()).then(rolewinner => {
+                        // highestrole_id will be winner of current_channel
+                        //var newname = current_channel.name.replace(current_channel.name.substring(0, 1), rolewinner.name.substring(0, 1));
+                        current_channel.setName(current_channel.name.replace(current_channel.name.substring(1, 2), rolewinner.name.substring(1, 2)));
+                        const msgchnl = current_channel.guild.channels.cache.find(confess => confess.id === settings.turflogs);
+                        const embed = new MessageEmbed()
+                        .setColor(settings.svrclr)
+                        .setDescription(rolewinner.toString() + " has taken over **" + current_channel.name + "** with **" + highest + "** members!")
+                        msgchnl.send(embed);
+                    });
+                }
+                else if(tie === true) {
+                    var oldowner = "";
+                    roles.cache.forEach((current_role) => {
+                        if (current_role.name.includes(settings.familyemoji) && current_role.name.substring(1, 2) === current_channel.name.substring(1, 2)) {
+                            oldowner = current_role.toString();
+                        }
+                    });
+                    const msgchnl = current_channel.guild.channels.cache.find(confess => confess.id === settings.turflogs);
+                    const embed = new MessageEmbed()
+                    .setColor(settings.svrclr)
+                    .setDescription("The battle for **" + current_channel.name + "** resulted in a tie, no victors! " + oldowner + " still reigns!")
+                    msgchnl.send(embed);
+                }
+            });
+        }
+    });
+}
+function secondTimer() {
+    var date = new Date();
 
+    //get all voice channels of turf category
+    const category = bot.channels.cache.find(category => category.id === settings.turfs);
+    var channels = category.children;
+    //check each channel
+    channels.forEach((current_channel) => {
+        if(current_channel.type === 'voice') {
+            // check time if 20:00(8pm) and during the first 10 minute (8:00 and ends on 8:11)
+            if(date.getHours() === 20 && date.getMinutes() < 10) {
+                //open the channels
+                current_channel.guild.roles.fetch(settings.familiesrole).then(role => {
+                    if(!current_channel.permissionsFor(role).has("CONNECT"))
+                        current_channel.updateOverwrite(role, { CONNECT: true });
+                })
+
+                if(date.getMinutes() === 0 && date.getSeconds() < 2 && announced === false) {
+                    announced = true;
+                    const annchannel = current_channel.guild.channels.cache.find(confess => confess.id === settings.announce);
+                    const embed = new MessageEmbed()
+                    .setColor(settings.svrclr)
+                    .setDescription('The territory war has now started! Read \#territory-logs for more information.')
+                    annchannel.send("@everyone", embed);
+                }
+                // if ending then start count
+                if(date.getMinutes() === 9 && date.getSeconds() >= 58 && counting === false) {
+                    counting = true;
+                    countMembers();
+                    announced = false;
+                }
+            }
+            else {
+                //close the channels
+                current_channel.guild.roles.fetch(settings.familiesrole).then(role => {
+                    if(current_channel.permissionsFor(role).has("CONNECT"))
+                        current_channel.updateOverwrite(role, { CONNECT: false });
+                })
+                .catch(console.error);
+
+                if(counting)
+                    counting = false;
+            }
+        }
+    });
+}
 bot.on('guildMemberAdd', member => { // user
     const channel = member.guild.channels.cache.find(channel => channel.id === settings.general)
     if(!channel) return;
@@ -227,21 +337,38 @@ bot.on('message', async message =>  //author
     }
     
     if (command === 'families') {
+        const turfs = bot.channels.cache.find(category => category.id === settings.turfs).children;
         const embed = new MessageEmbed()
         .setDescription('**Families**')
         .setColor(settings.svrclr)
         message.guild.roles.fetch().then(roles => {
             roles.cache.forEach((current_role) => {
                 if (current_role.name.includes(settings.familyemoji)) {
-                    embed.addField(current_role.name, '`Members: ' + current_role.members.size + ' | Leader: Lowkid`', false);
+                    var turfcount = 0;
+                    var leader = "";
+                    message.guild.roles.fetch().then(famleaders => {
+                        famleaders.cache.forEach((famleaderrole) => {
+                            if(famleaderrole.name.includes("Leader") && famleaderrole.name.substring(1, 2) == current_role.name.substring(1, 2)) {
+                                famleaderrole.members.forEach((leadermember) => {
+                                    leader = leadermember.toString();
+                                })
+                            }
+                        })
+                    })
+                    turfs.forEach((current_channel) => {
+                        if(current_channel.name.substring(1, 2) == current_role.name.substring(1, 2))
+                            turfcount++;
+                    });
+                    setTimeout(() => {
+                        embed.addField('**' + current_role.name + '**', 'Members: ' + current_role.members.size + '\nLeader: ' + leader + '\nPoints: ' + turfcount + "\n━━━━", false);
+                    }, 1000);
                 }
             })
         })
         .catch(error => console.log(error))
         setTimeout(() => {
             message.channel.send(embed);
-            message.react("👍")
-        }, 500);
+        }, 1500);
     }
     if (command === 'suggest') 
     {
@@ -288,7 +415,6 @@ bot.on('message', async message =>  //author
         //.setFooter(settings.copyright, 'https://i.imgur.com/w0y9l7X.png')
         message.channel.send(embed);
     }
-
     if (command === 'avatar') {
         var user;
         user = message.mentions.users.first(); 

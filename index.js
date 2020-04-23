@@ -5,75 +5,79 @@ const bot = new Client();
 const settings = {
     prefix: '/',
     token: 'NzAxNDE4NTc5NzAyMzE3MDk3.Xp0mGg.XUWXq7dEBTVatvHuQ1SY2BvhrYQ',
-    general: '686135103952519168',
-    announce: '686135103952519168',
-    regans: '686135103952519168',
+    general: '701433491673317417',
+    announce: '701433491673317417',
+    regans: '701433491673317417',
     familyemoji: '❒',
     turfs: '686086586642989148', // turfs category, not channel
     svr: 'Lowkid'
 }
-
+var Guild;
 bot.on('ready', () => {
     console.log('Pakantot.');
     bot.user.setActivity('ʟᴏᴡᴋɪᴅ Families Test');
-    //setInterval(secondTimer, 1000);
+    setInterval(secondTimer, 1000);
+    counting = false;
 });
-var Guild;
-bot.on("guildCreate", guild => {
-    Guild = guild;
-});
-function Create2DArray(rows) {
-    var arr = [];
-  
-    for (var i=0;i<rows;i++) {
-       arr[i] = [];
-    }
-  
-    return arr;
-}
+var announced = false;
 var counting = false; // to count members of turf channel
-var usersInChannel = Create2DArray(50); // make sure to clear the values after counting (in case of new and deleted fams)
 function countMembers() {
-    const category = bot.channels.cache.find(category => category.id === settings.turfs);
-    var channels = category.children;
-    var i = 0; // iterator for channels
-    channels.forEach((current_channel) => {
-        Guild.roles.fetch().then(roles => {
-            var x = 0; // iterator for currentrole
-            roles.cache.forEach((current_role) => {
-                if (current_role.name.includes(settings.familyemoji)) {
-                    usersInChannel[i][x] = 0;
-                    current_role.members.forEach((current_member) => {
-                        if(current_member.voice.channelID === current_channel.id) {
-                            // this member is in the current_channel
-                            usersInChannel[i][x]++;
-                        }
-                    });
-                    x++;
-                }
-            })
-        });
-        i++;
-    });
-    setTimeout(() => {
-        i = 0; // reset iterator
-        channels.forEach((current_channel) => {
+    const turfcategory = bot.channels.cache.find(category => category.id === settings.turfs);
+    var turfs = turfcategory.children;
+    turfs.forEach((current_channel) => {
+        if(current_channel.members.size != 0 && current_channel.type === 'voice') {
             Guild.roles.fetch().then(roles => {
-                x = 0; //reset also
+                var i = 0; // iterator for roles
+                var highest = 0;
+                var highestrole_id;
+                var tie = false;
                 roles.cache.forEach((current_role) => {
                     if (current_role.name.includes(settings.familyemoji)) {
-                        //var maxRow = usersInChannel.map(function(row){ return Math.max.apply(Math, row); });
-                        if(Math.max.apply(null, usersInChannel[i]) === usersInChannel[i][x]) {
-                            // then this is the winner
-
+                        var usersInChannel = 0;
+                        current_role.members.forEach((current_member) => {
+                            if(current_member.voice.channelID === current_channel.id) {
+                                // this member is in the current_channel
+                                usersInChannel++;
+                            }
+                        });
+                        if(usersInChannel === highest) {
+                            tie = true;
                         }
-                        x++;
+                        if(usersInChannel > highest){
+                            highest = usersInChannel;
+                            highestrole_id = current_role.id;
+                        }
+                        i++;
                     }
-                });
+                })
+                if(highest > 0 && tie === false) {
+                    Guild.roles.fetch(highestrole_id.toString()).then(rolewinner => {
+                        // highestrole_id will be winner of current_channel
+                        //var newname = current_channel.name.replace(current_channel.name.substring(0, 1), rolewinner.name.substring(0, 1));
+                        current_channel.setName(current_channel.name.replace(current_channel.name.substring(1, 2), rolewinner.name.substring(1, 2)));
+                        const annchannel = Guild.channels.cache.find(confess => confess.id === settings.announce);
+                        const embed = new MessageEmbed()
+                        .setColor('RANDOM')
+                        .setDescription(rolewinner.toString() + " has taken over **" + current_channel.name + "** with **" + highest + "** members!")
+                        annchannel.send(embed);
+                    });
+                }
+                else if(tie === true) {
+                    var oldowner = "";
+                    roles.cache.forEach((current_role) => {
+                        if (current_role.name.includes(settings.familyemoji) && current_role.name.substring(1, 2) === current_channel.name.substring(1, 2)) {
+                            oldowner = current_role.toString();
+                        }
+                    });
+                    const annchannel = Guild.channels.cache.find(confess => confess.id === settings.announce);
+                    const embed = new MessageEmbed()
+                    .setColor('RANDOM')
+                    .setDescription("The battle for **" + current_channel.name + "** resulted in a tie, no victors! " + oldowner + " still reigns!")
+                    annchannel.send(embed);
+                }
             });
-            i++;
-        });
-    }, 2000);
+        }
+    });
 }
 function secondTimer() {
     var date = new Date();
@@ -83,25 +87,35 @@ function secondTimer() {
     var channels = category.children;
     //check each channel
     channels.forEach((current_channel) => {
-        // check time if 20:00(8pm) and during the first minute (8:00 and ends on 8:01)
-        if(date.getHours() === 20 && date.getMinutes() < 10) {
-            //open the channels
-            if(!current_channel.permissionsFor(current_channel.guild.roles.everyone).has("CONNECT"))
-                current_channel.updateOverwrite(current_channel.guild.roles.everyone, { CONNECT: true });
-            
-            // if ending then start count
-            if(date.getMinutes === 9 && date.getSeconds() >= 58 && !counting) {
-                counting = true;
-                countMembers();
+        if(current_channel.type === 'voice') {
+            // check time if 20:00(8pm) and during the first 10 minute (8:00 and ends on 8:11)
+            if(date.getHours() === 16 && date.getMinutes() < 29) {
+                //open the channels
+                if(!current_channel.permissionsFor(current_channel.guild.roles.everyone).has("CONNECT"))
+                    current_channel.updateOverwrite(current_channel.guild.roles.everyone, { CONNECT: true });
+                if(date.getMinutes() === 28 && date.getSeconds() < 2 && announced === false) {
+                    announced = true;
+                    const annchannel = Guild.channels.cache.find(confess => confess.id === settings.announce);
+                    const embed = new MessageEmbed()
+                    .setColor('RANDOM')
+                    .setDescription('The turf war has now started!')
+                    annchannel.send("@everyone", embed);
+                }
+                // if ending then start count
+                if(date.getMinutes() === 28 && date.getSeconds() >= 58 && counting === false) {
+                    counting = true;
+                    countMembers();
+                    announced = false;
+                }
             }
-        }
-        else {
-            //close the channels
-            if(current_channel.permissionsFor(current_channel.guild.roles.everyone).has("CONNECT"))
-                current_channel.updateOverwrite(current_channel.guild.roles.everyone, { CONNECT: false });
+            else {
+                //close the channels
+                if(current_channel.permissionsFor(current_channel.guild.roles.everyone).has("CONNECT"))
+                    current_channel.updateOverwrite(current_channel.guild.roles.everyone, { CONNECT: false });
 
-            if(counting)
-                counting = false;
+                if(counting)
+                    counting = false;
+            }
         }
     });
 }
@@ -200,14 +214,7 @@ bot.on('message', async message =>
         const confess = bot.channels.cache.find(confess => confess.id === settings.general)
         confess.send(embed);
     }
-    if (command === 'ajoin') 
-    {
-        if (message.member.voice.channel) {
-            const connection = await message.member.voice.channel.join();
-          } else {
-            message.reply('You need to join a voice channel first!');
-        }
-    }
+
     if (command === 'cnn') {
         const confess = message.guild.channels.cache.find(confess => confess.id === settings.announce)
         if(!confess) return;
@@ -274,7 +281,14 @@ bot.on('message', async message =>
         .setFooter('Copyright LWKD 2020', 'https://i.imgur.com/w0y9l7X.png')
         message.channel.send(embed);
     }
-
+    if (command === 'ajoin') 
+    {
+        if (message.member.voice.channel) {
+            const connection = await message.member.voice.channel.join();
+          } else {
+            message.reply('You need to join a voice channel first!');
+        }
+    }
     if (command === 'avatar') {
         var user;
         user = message.mentions.users.first(); 
@@ -296,61 +310,38 @@ bot.on('message', async message =>
         }
     }
     if (command === 'families') {
-        var embedlist = "";
-        const linebreak = "\n";
-        const separator = " | Members: "
+        const turfs = bot.channels.cache.find(category => category.id === settings.turfs).children;
+        const embed = new MessageEmbed()
+        .setDescription('**Families**')
+        .setColor('RANDOM')
         message.guild.roles.fetch().then(roles => {
             roles.cache.forEach((current_role) => {
                 if (current_role.name.includes(settings.familyemoji)) {
-                    embedlist = embedlist.concat(current_role.name, separator, current_role.members.size, linebreak);
+                    var turfcount = 0;
+                    var leader = "";
+                    message.guild.roles.fetch().then(famleaders => {
+                        famleaders.cache.forEach((famleaderrole) => {
+                            if(famleaderrole.name.includes("Leader") && famleaderrole.name.substring(1, 2) == current_role.name.substring(1, 2)) {
+                                famleaderrole.members.forEach((leadermember) => {
+                                    leader = leadermember.toString();
+                                })
+                            }
+                        })
+                    })
+                    turfs.forEach((current_channel) => {
+                        if(current_channel.name.substring(1, 2) == current_role.name.substring(1, 2))
+                            turfcount++;
+                    });
+                    setTimeout(() => {
+                        embed.addField('**' + current_role.name + '**', 'Members: ' + current_role.members.size + '\nLeader: ' + leader + '\nPoints: ' + turfcount + "\n━━━━", false);
+                    }, 1000);
                 }
             })
         })
         .catch(error => console.log(error))
         setTimeout(() => {
-            const embed = new MessageEmbed()
-            .setTitle(settings.svr)
-            .setColor('RANDOM')
-            .addField("Families", embedlist, false)
-            .setFooter('Copyright LWKD 2020', 'https://i.imgur.com/w0y9l7X.png')
             message.channel.send(embed);
-        }, 500);
-    }
-
-    if(command === 'testopen') {
-        const category = bot.channels.cache.find(category => category.id === settings.turfs);
-        var channels = category.children;
-
-        channels.forEach((current_channel) => {
-            if(!current_channel.permissionsFor(current_channel.guild.roles.everyone).has("CONNECT"))
-                current_channel.updateOverwrite(current_channel.guild.roles.everyone, { CONNECT: true });
-        });
-    }
-    if(command === 'testclose') {
-        const category = bot.channels.cache.find(category => category.id === settings.turfs);
-        var channels = category.children;
-        channels.forEach((current_channel) => {
-            if(current_channel.permissionsFor(current_channel.guild.roles.everyone).has("CONNECT"))
-                current_channel.updateOverwrite(current_channel.guild.roles.everyone, { CONNECT: false });
-        });
-    }
-    if(command === 'ee') {
-        countMembers();
-        setTimeout(() => {
-            var max = usersInChannel[0].reduce(function(a, b) {
-                return Math.max(a, b);
-            });
-            message.reply(max);
-        }, 500);
-    }
-    if(command === 'aa') {
-        countMembers();
-        setTimeout(() => {
-            var max = usersInChannel[1].reduce(function(a, b) {
-                return Math.max(a, b);
-            });
-            message.reply(max);
-        }, 500);
+        }, 1500);
     }
     function GetUserAvatar(user) {
         const embed = new MessageEmbed()

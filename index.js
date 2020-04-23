@@ -401,8 +401,7 @@ bot.on('message', async message =>  //author
         message.react("👍")
     }
     if (command === 'time') {
-        var date = new Date();
-        message.reply(date);
+        message.reply(Date());
     }
     if (command === 'slap') {
 

@@ -400,6 +400,10 @@ bot.on('message', async message =>  //author
         message.channel.send(embed);
         message.react("👍")
     }
+    if (command === 'time') {
+        var date = new Date();
+        message.reply(date);
+    }
     if (command === 'slap') {
 
         const embed = new MessageEmbed()

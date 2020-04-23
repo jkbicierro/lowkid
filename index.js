@@ -105,7 +105,7 @@ function secondTimer() {
                     const annchannel = current_channel.guild.channels.cache.find(confess => confess.id === settings.announce);
                     const embed = new MessageEmbed()
                     .setColor(settings.svrclr)
-                    .setDescription('The territory war has now started! Read \#territory-logs for more information.')
+                    .setDescription('The territory war has now started! Read <#702804654915846204> for more information.')
                     annchannel.send("@everyone", embed);
                 }
                 // if ending then start count

@@ -15,7 +15,7 @@ const settings = {
 
 bot.on('ready', async message => {
     console.log('Pakantot.');
-    bot.user.setActivity('Lowkid v0.2.4');
+    bot.user.setActivity('Lowkid v0.3.1');
 });
 
 bot.on('guildMemberAdd', member => { // user
@@ -67,6 +67,51 @@ bot.on('message', async message =>  //author
         //.setFooter(settings.copyright, 'https://i.imgur.com/w0y9l7X.png');
         message.channel.send(embed);
         }
+    }
+    if (command === 'pay') {
+ 
+        var user = message.mentions.users.first()
+        var amount = args[1]
+        
+        if (!user) {
+            const embed = new MessageEmbed()
+            .setColor(settings.svrclr)
+            .setDescription(`💶 **${message.author.username}** Reply the user you want to send money to!`)
+            message.channel.send(embed);
+            return;
+        }
+        if (!amount) {
+            const embed = new MessageEmbed()
+            .setColor(settings.svrclr)
+            .setDescription(`💶 **${message.author.username}** Specify the amount you want to pay!`)
+            message.channel.send(embed);
+            return;
+        }
+    
+        var output = await eco.FetchBalance(message.author.id)
+        if (output.balance < amount) {
+            const embed = new MessageEmbed()
+            .setColor(settings.svrclr)
+            .setDescription(`💶 **${message.author.username}** You have fewer coins than the amount you want to transfer!`)
+            message.channel.send(embed);
+            return;
+        } 
+     
+        var transfer = await eco.Transfer(message.author.id, user.id, amount)
+        //message.reply(`Transfering coins successfully done!\nBalance from ${message.author.tag}: ${transfer.FromUser}\nBalance from ${user.tag}: ${transfer.ToUser}`);
+        const embed = new MessageEmbed()
+  
+        .setColor(settings.svrclr)
+        .setDescription(`💶 Transfering coins successfully done!`)
+        .addField(`${message.author.tag} Balance:`, '`'+`${transfer.FromUser} Lowbucks`+'`', false)
+        .addField(`${user.tag} Balance:`, '`'+`${transfer.ToUser} Lowbucks`+'`', false)
+        message.channel.send(embed); 
+    }
+    if (command === 'dice') { 
+        const embed = new MessageEmbed()
+        .setColor(settings.svrclr)
+        .setDescription(`🎲 **${message.author}** roll the dice: **${Math.floor(Math.random()*6 + 1)}**`)
+        message.channel.send(embed);
     }
 
     // Confess
@@ -128,25 +173,74 @@ bot.on('message', async message =>  //author
         message.channel.send(embed);
         message.react("👍")
     }
-
     if (command === 'sponsor') {
-
         const embed = new MessageEmbed()
         .setTitle('Sponsorship Rewards')
         .setDescription('These are our sponsorship rewards if you sponsor the following you will get the reward right next to it.')
         .setColor(settings.svrclr)
-        .addField('💰 50 Pesos Load', 'Custom role', false)
-        .addField('💰 50 Pesos Load', 'Custom color', false)
-        .addField('💰 50 Pesos Load', 'Custom emoji', false)
-        .addField('💰 50 Pesos Load', 'Nickname access', false)
-        .addField('💰 50 Pesos Load', '+$100,000', false)
-        .addField('💰 100 Pesos Load', '+$200,000', false)
-        .addField('💰 250 Pesos Load', '+$350,000', false)
-        .addField('💰 500 Pesos Load', '+$600,000', false)
-        .addField('💰 Nitro Classic', '+$350,000', false)
-        .addField('💰 Discord Nitro', '+$600,000', false)
+        .addField('💰 50 Pesos Load', '`Custom role`', false)
+        .addField('💰 50 Pesos Load', '`Custom color`', false)
+        .addField('💰 50 Pesos Load', '`Custom emoji`', false)
+        .addField('💰 50 Pesos Load', '`Nickname access`', false)
+        .addField('💰 50 Pesos Load', '`+$100,000`', false)
+        .addField('💰 100 Pesos Load', '`+$200,000`', false)
+        .addField('💰 250 Pesos Load', '`+$350,000`', false)
+        .addField('💰 500 Pesos Load', '`+$600,000`', false)
+        .addField('💰 Nitro Classic', '`+$350,000`', false)
+        .addField('💰 Discord Nitro', '`+$600,000`', false)
         message.channel.send(embed);
         message.react("👍")
+    }
+    if (command === 'help') // author
+    {
+        if (args[0] === 'club') {
+            const embed = new MessageEmbed()
+            .setDescription('**Club**\n`Usage: /families`')
+            .setColor(settings.svrclr)
+            message.channel.send(embed);
+            message.react("👍")
+            return;
+        }
+        if (args[0] === 'fun') {
+            const embed = new MessageEmbed()
+            .setDescription('**Fun**\n`Usage: /slap, /kiss`')
+            .setColor(settings.svrclr)
+            message.channel.send(embed);
+            message.react("👍")
+            return;
+        }
+        if (args[0] === 'economy') {
+            const embed = new MessageEmbed()
+            .setDescription('**Economy**\n`Usage: /(bal)ance, /daily, /dice, /dicebet, /grind, /pay`')
+            .setColor(settings.svrclr)
+            message.channel.send(embed);
+            message.react("👍")
+            return;
+        }
+        const embed = new MessageEmbed()
+        .setDescription('**Usage:** /help [option]\n\
+            `Options: club, fun, economy`')
+        .setColor(settings.svrclr)
+        message.channel.send(embed);
+        message.react("👍")
+    }
+    
+    if (command === 'families') {
+        const embed = new MessageEmbed()
+        .setDescription('**Families**')
+        .setColor(settings.svrclr)
+        message.guild.roles.fetch().then(roles => {
+            roles.cache.forEach((current_role) => {
+                if (current_role.name.includes(settings.familyemoji)) {
+                    embed.addField(current_role.name, '`Members: ' + current_role.members.size + ' | Leader: nizepogi`', false);
+                }
+            })
+        })
+        .catch(error => console.log(error))
+        setTimeout(() => {
+            message.channel.send(embed);
+            message.react("👍")
+        }, 500);
     }
     if (command === 'suggest') 
     {

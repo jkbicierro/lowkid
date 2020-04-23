@@ -48,7 +48,7 @@ bot.on('message', async message =>  //author
         var output = await eco.FetchBalance(message.author.id)
         const embed = new MessageEmbed()
         .setColor(settings.svrclr)
-        .setDescription(`💶 **${message.author.username}** currently has **${output.balance}** Lowbucks!`)
+        .setDescription(`💶 **${message.author}** currently has **${output.balance}** Lowbucks!`)
         //.setFooter(settings.copyright, 'https://i.imgur.com/w0y9l7X.png');
         message.channel.send(embed);
     }

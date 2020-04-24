@@ -6,14 +6,14 @@ const bot = new Client();
 const settings = {
     prefix: '/',
     token: 'NzAxNDA0NjgzOTAxNTk5Nzc1.XqJt8w.x3YmAY47DlgnFyuSuStw6uDQhg0', 
-    general: '703103351549722664', // Channel ID
-    announce: '703103351549722664', // Channel ID
+    general: '682110743503437845', // Channel ID
+    announce: '691109820903718993', // Channel ID
     copyright: '© ᴸᵂᴷᴰ 2020',
     svrclr: '#f08080',
     familyemoji: '❒',
-    turfs: '686086586642989148', // category id
-    turflogs: '702813712943415321', // channel id
-    familiesrole: '703103980695453737', // role id
+    turfs: '696550521313558568', // category id
+    turflogs: '702806543002763324', // channel id
+    familiesrole: '682438247506378760', // role id
     svr: 'Lowkid 낮 PH'
 }
 

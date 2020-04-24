@@ -31,7 +31,6 @@ function countMembers() {
     turfs.forEach((current_channel) => {
         if(current_channel.members.size != 0 && current_channel.type === 'voice') {
             current_channel.guild.roles.fetch().then(roles => {
-                var i = 0; // iterator for roles
                 var highest = 0;
                 var highestrole_id;
                 var tie = false;
@@ -44,17 +43,16 @@ function countMembers() {
                                 usersInChannel++;
                             }
                         });
-                        if(usersInChannel === highest) {
+                        if(usersInChannel === highest && highest > 0) {
                             tie = true;
                         }
                         if(usersInChannel > highest){
                             highest = usersInChannel;
                             highestrole_id = current_role.id;
                         }
-                        i++;
                     }
                 })
-                if(highest > 0 && tie === false) {
+                if(tie === false && highest > 0) {
                     current_channel.guild.roles.fetch(highestrole_id.toString()).then(rolewinner => {
                         // highestrole_id will be winner of current_channel
                         //var newname = current_channel.name.replace(current_channel.name.substring(0, 1), rolewinner.name.substring(0, 1));
@@ -76,7 +74,10 @@ function countMembers() {
                     const msgchnl = current_channel.guild.channels.cache.find(confess => confess.id === settings.turflogs);
                     const embed = new MessageEmbed()
                     .setColor(settings.svrclr)
-                    .setDescription("The battle for **" + current_channel.name + "** resulted in a tie, no victors! " + oldowner + " still reigns!")
+                    if(current_channel.name.substring(1, 2) === '?') // if no old owner
+                        embed.setDescription("The battle for **" + current_channel.name + "** resulted in a tie, no victors!");
+                    else
+                        embed.setDescription("The battle for **" + current_channel.name + "** resulted in a tie, no victors! " + oldowner + " still reigns!");
                     msgchnl.send(embed);
                 }
             });
@@ -91,9 +92,9 @@ function secondTimer() {
     const category = bot.channels.cache.find(category => category.id === settings.turfs);
     var channels = category.children;
     var Guild = category.guild;
+    
     //check each channel
     channels.forEach((current_channel) => {
- 
         if(current_channel.type === 'voice') {
             // check time if 20:00(8pm) and during the first 10 minute (8:00 and ends on 8:11)
             if(date.getHours() === 20 && date.getMinutes() < 10) {
@@ -125,11 +126,9 @@ function secondTimer() {
                         current_channel.updateOverwrite(role, { CONNECT: false });
                 })
                 .catch(console.error);
-
                 if(counting)
                     counting = false;
             }
-        
         }
     });
 }

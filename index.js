@@ -5,21 +5,21 @@ const bot = new Client();
 
 const settings = {
     prefix: '/',
-    token: 'Njg2MDg2MDU4Njc2NDUzMzg1.Xp6jAA.vFAL-SbVa3nVwc6jKjf0XYUhYQU', 
-    general: '682110743503437845', // Channel ID
-    announce: '691109820903718993', // Channel ID
+    token: 'NzAxNDA0NjgzOTAxNTk5Nzc1.XqJt8w.x3YmAY47DlgnFyuSuStw6uDQhg0', 
+    general: '703103351549722664', // Channel ID
+    announce: '703103351549722664', // Channel ID
     copyright: '© ᴸᵂᴷᴰ 2020',
     svrclr: '#f08080',
     familyemoji: '❒',
-    turfs: '696550521313558568', // category id
-    turflogs: '702806543002763324', // channel id
-    familiesrole: '682438247506378760', // role id
+    turfs: '686086586642989148', // category id
+    turflogs: '702813712943415321', // channel id
+    familiesrole: '703103980695453737', // role id
     svr: 'Lowkid 낮 PH'
 }
 
 bot.on('ready', async message => {
     console.log('Pakantot.');
-    bot.user.setActivity('Lowkid v0.3.2');
+    bot.user.setActivity('Lowkid v0.4.1');
     setInterval(secondTimer, 1000);
     counting = false;
 });
@@ -66,7 +66,7 @@ function countMembers() {
                         msgchnl.send(embed);
                     });
                 }
-                else if(tie === true) {
+                else if(tie === true && highest > 0) {
                     var oldowner = "";
                     roles.cache.forEach((current_role) => {
                         if (current_role.name.includes(settings.familyemoji) && current_role.name.substring(1, 2) === current_channel.name.substring(1, 2)) {
@@ -83,14 +83,17 @@ function countMembers() {
         }
     });
 }
+
 function secondTimer() {
     var date = new Date();
 
     //get all voice channels of turf category
     const category = bot.channels.cache.find(category => category.id === settings.turfs);
     var channels = category.children;
+    var Guild = category.guild;
     //check each channel
     channels.forEach((current_channel) => {
+ 
         if(current_channel.type === 'voice') {
             // check time if 20:00(8pm) and during the first 10 minute (8:00 and ends on 8:11)
             if(date.getHours() === 20 && date.getMinutes() < 10) {
@@ -126,6 +129,7 @@ function secondTimer() {
                 if(counting)
                     counting = false;
             }
+        
         }
     });
 }
@@ -155,13 +159,63 @@ bot.on('message', async message =>  //author
     if (!message.content.startsWith(settings.prefix) || message.author.bot) return;
 
     if (command === 'bal') {
-        var output = await eco.FetchBalance(message.author.id)
-        const embed = new MessageEmbed()
-        .setColor(settings.svrclr)
-        .setDescription(`💶 **${message.author}** currently has **${output.balance}** Lowbucks!`)
-        //.setFooter(settings.copyright, 'https://i.imgur.com/w0y9l7X.png');
-        message.channel.send(embed);
+        var user;
+        user = message.mentions.users.first(); 
+        if (!user) { 
+            if (!args[0]) { 
+                var output = await eco.FetchBalance(message.author.id)
+                const embed = new MessageEmbed()
+                .setColor(settings.svrclr)
+                .setDescription(`💶 **${message.author}** currently has **${output.balance}** lowbucks!`)
+                //.setFooter(settings.copyright, 'https://i.imgur.com/w0y9l7X.png');
+                message.channel.send(embed);
+            } 
+        } 
+        else { 
+            var output = await eco.FetchBalance(user.id)
+            const embed = new MessageEmbed()
+            .setColor(settings.svrclr)
+            .setDescription(`💶 **${user}** currently has **${output.balance}** lowbucks!`)
+            //.setFooter(settings.copyright, 'https://i.imgur.com/w0y9l7X.png');
+            message.channel.send(embed);
+        }
     }
+    if (command === 'leaderboard') {
+ 
+        //If you use discord-economy guild based you can use the filter() function to only allow the database within your guild
+        //(message.author.id + message.guild.id) can be your way to store guild based id's
+        //filter: x => x.userid.endsWith(message.guild.id)
+     
+        //If you put a mention behind the command it searches for the mentioned user in database and tells the position.
+        if (message.mentions.users.first()) {
+     
+          var output = await eco.Leaderboard({
+            filter: x => x.balance > 50,
+            search: message.mentions.users.first().id
+          })
+          message.channel.send(`The user ${message.mentions.users.first().tag} is number ${output} on my leaderboard!`);
+     
+        } else {
+     
+          eco.Leaderboard({
+            limit: 3, //Only takes top 3 ( Totally Optional )
+            filter: x => x.balance > 50 //Only allows people with more than 100 balance ( Totally Optional )
+          }).then(async users => { //make sure it is async
+     
+            if (users[0]) var firstplace = await bot.fetchUser(users[0].userid) //Searches for the user object in discord for first place
+            if (users[1]) var secondplace = await bot.fetchUser(users[1].userid) //Searches for the user object in discord for second place
+            if (users[2]) var thirdplace = await bot.fetchUser(users[2].userid) //Searches for the user object in discord for third place
+ 
+            message.channel.send(`My leaderboard:
+     
+    1 - ${firstplace && firstplace.tag || 'Nobody Yet'} : ${users[0] && users[0].balance || 'None'}
+    2 - ${secondplace && secondplace.tag || 'Nobody Yet'} : ${users[1] && users[1].balance || 'None'}
+    3 - ${thirdplace && thirdplace.tag || 'Nobody Yet'} : ${users[2] && users[2].balance || 'None'}`)
+     
+          })
+     
+        }
+      }
     if (command === 'daily') {
         var output = await eco.Daily(message.author.id)
         if (output.updated) {
@@ -178,6 +232,52 @@ bot.on('message', async message =>  //author
         //.setFooter(settings.copyright, 'https://i.imgur.com/w0y9l7X.png');
         message.channel.send(embed);
         }
+    }
+    if (command === 'givemoney') {
+        var user = message.mentions.users.first()
+        var amount = args[1]
+        if (!user) {
+            const embed = new MessageEmbed()
+            .setColor(settings.svrclr)
+            .setDescription(`💶 **${message.author.username}** Reply the user you want to give money to!`)
+            message.channel.send(embed);
+            return;
+        }
+        if (!amount) {
+            const embed = new MessageEmbed()
+            .setColor(settings.svrclr)
+            .setDescription(`💶 **${message.author.username}** Specify the amount you want to give!`)
+            message.channel.send(embed);
+            return;
+        }
+        var profile = eco.AddToBalance(user.id, amount)
+        const embed = new MessageEmbed()
+        .setColor(settings.svrclr)
+        .setDescription(`💶 Added **${amount}** lowbucks to ${user}'s balance!`)
+        message.channel.send(embed); 
+    }
+    if (command === 'setmoney') {
+        var user = message.mentions.users.first()
+        var amount = args[1]
+        if (!user) {
+            const embed = new MessageEmbed()
+            .setColor(settings.svrclr)
+            .setDescription(`💶 **${message.author.username}** Reply the user you want to set money to!`)
+            message.channel.send(embed);
+            return;
+        }
+        if (!amount) {
+            const embed = new MessageEmbed()
+            .setColor(settings.svrclr)
+            .setDescription(`💶 **${message.author.username}** Specify the amount you want to set!`)
+            message.channel.send(embed);
+            return;
+        }
+        var profile = eco.SetBalance(user.id, amount)
+        const embed = new MessageEmbed()
+        .setColor(settings.svrclr)
+        .setDescription(`💶 Set **${amount}** lowbucks to ${user}'s balance!`)
+        message.channel.send(embed); 
     }
     if (command === 'pay') {
  
@@ -218,13 +318,46 @@ bot.on('message', async message =>  //author
         .addField(`${user.tag} Balance:`, '`'+`${transfer.ToUser} Lowbucks`+'`', false)
         message.channel.send(embed); 
     }
+    if (command === 'dicebet') { 
+        var user;
+        var bet = args[1]
+        user = message.mentions.users.first(); 
+        if(user) {
+            if(!bet) {
+                const embed = new MessageEmbed()
+                .setColor(settings.svrclr)
+                .setDescription('**Usage:** /dicebet [user] [bet]\n`ex. /dicebet @Lowkid 1000`')
+                message.channel.send(embed); 
+            } else {
+                var p1 = Math.floor(Math.random()*6 + 1);
+                var p2 = Math.floor(Math.random()*6 + 1);
+                const embed = new MessageEmbed()
+                .setColor(settings.svrclr)
+                .setDescription(`${message.author} roll the dice: ${p1} ${user} roll the dice: ${p2}`)
+                message.channel.send(embed); 
+                //if (p1 = p2) return message.reply('TIE')
+                if (p1 > p2) return message.reply(`winner:${message.author}`)
+                else if (p1 < p2) return message.reply(`winner:${user}`)
+                else if (p1 = p2) return message.reply('TIE')
+            }
+        } else {
+            if(!args[0]) {
+                const embed = new MessageEmbed()
+                .setColor(settings.svrclr)
+                .setDescription('**Usage:** /dicebet [user] [bet]\n`ex. /dicebet @Lowkid 1000`')
+                message.channel.send(embed); 
+            }
+        }
+    }
+ 
     if (command === 'dice') { 
+        //var gamble = await eco.Dice(message.author.id, roll, amount).catch(console.error)
+        //message.reply(`The dice rolled `+Math.floor(Math.random()*6 + 1))
         const embed = new MessageEmbed()
         .setColor(settings.svrclr)
-        .setDescription(`🎲 **${message.author}** roll the dice: **${Math.floor(Math.random()*6 + 1)}**`)
+        .setDescription(`🎲 **${message.author.username}** roll the dice: **${Math.floor(Math.random()*6 + 1)}**`)
         message.channel.send(embed);
     }
-
     // Confess
     if (command === 'confess') {
         params = message.content.slice (8);
@@ -309,7 +442,6 @@ bot.on('message', async message =>  //author
             .setDescription('**Club**\n`Usage: /families`')
             .setColor(settings.svrclr)
             message.channel.send(embed);
-            message.react("👍")
             return;
         }
         if (args[0] === 'fun') {
@@ -317,23 +449,20 @@ bot.on('message', async message =>  //author
             .setDescription('**Fun**\n`Usage: /slap, /kiss`')
             .setColor(settings.svrclr)
             message.channel.send(embed);
-            message.react("👍")
             return;
         }
-        if (args[0] === 'economy') {
+        if (args[0] === 'lowbucks') {
             const embed = new MessageEmbed()
-            .setDescription('**Economy**\n`Usage: /(bal)ance, /daily, /dice, /dicebet, /grind, /pay`')
+            .setDescription('**Lowbucks**\n`Usage: /(bal)ance, /daily, /dicebet, /grind, /pay, /dice`\n\n`Staff: /givemoney, /setmoney`')
             .setColor(settings.svrclr)
             message.channel.send(embed);
-            message.react("👍")
             return;
         }
         const embed = new MessageEmbed()
         .setDescription('**Usage:** /help [option]\n\
-            `Options: club, fun, economy`')
+            `Options: club, fun, lowbucks`')
         .setColor(settings.svrclr)
         message.channel.send(embed);
-        message.react("👍")
     }
     
     if (command === 'families') {

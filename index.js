@@ -3,23 +3,47 @@ const eco = require("discord-economy");
 
 const bot = new Client();
 
-const settings = {
+
+// main settings
+/*const settings = {
     prefix: '/',
-    token: 'NzAxNDA0NjgzOTAxNTk5Nzc1.XqJt8w.x3YmAY47DlgnFyuSuStw6uDQhg0', 
+    token: 'Njg2MDg2MDU4Njc2NDUzMzg1.Xp6jAA.vFAL-SbVa3nVwc6jKjf0XYUhYQU', 
     general: '682110743503437845', // Channel ID
     announce: '691109820903718993', // Channel ID
     copyright: '© ᴸᵂᴷᴰ 2020',
     svrclr: '#f08080',
+    red: '#ff0000',
+    green: '#00ff00',
+    yellow: 'ffff00',
     familyemoji: '❒',
     turfs: '696550521313558568', // category id
     turflogs: '702806543002763324', // channel id
     familiesrole: '682438247506378760', // role id
     svr: 'Lowkid 낮 PH'
+}*/
+
+// dev settings
+const settings = {
+    prefix: '/',
+    // change mo lang yung token para sa test bot mo
+    token: 'NzAxNDE4NTc5NzAyMzE3MDk3.XqK3Hg.bXqUZ1L_knFmmY_IFS5dQIVjugE', 
+    general: '701433491673317417', // Channel ID
+    announce: '701433491673317417', // Channel ID
+    copyright: '© ᴸᵂᴷᴰ 2020',
+    svrclr: '#f08080',
+    red: '#ff0000',
+    green: '#00ff00',
+    yellow: 'ffff00',
+    familyemoji: '❒',
+    turfs: '686086586642989148', // category id
+    turflogs: '702813712943415321', // channel id
+    familiesrole: '703103980695453737', // role id
+    svr: 'Lowkid Dev'
 }
 
 bot.on('ready', async message => {
     console.log('Pakantot.');
-    bot.user.setActivity('Lowkid v0.4.1');
+    bot.user.setActivity('Lowkid v0.4.2');
     setInterval(secondTimer, 1000);
     counting = false;
 });
@@ -91,7 +115,6 @@ function secondTimer() {
     //get all voice channels of turf category
     const category = bot.channels.cache.find(category => category.id === settings.turfs);
     var channels = category.children;
-    var Guild = category.guild;
     
     //check each channel
     channels.forEach((current_channel) => {
@@ -120,10 +143,14 @@ function secondTimer() {
                 }
             }
             else {
-                //close the channels
                 current_channel.guild.roles.fetch(settings.familiesrole).then(role => {
-                    if(current_channel.permissionsFor(role).has("CONNECT"))
+                    if(current_channel.permissionsFor(role).has("CONNECT")) {
+                        // close the channels
                         current_channel.updateOverwrite(role, { CONNECT: false });
+                        current_channel.members.forEach((current_member) => {
+                            current_member.voice.kick() // disconnect the members
+                        });
+                    }
                 })
                 .catch(console.error);
                 if(counting)
@@ -150,6 +177,10 @@ bot.on('guildMemberAdd', member => { // user
     });
 });
 
+var authorid = [];
+var diceamount = [];
+var dicewithid = [];
+
 bot.on('message', async message =>  //author
 {
     var command = message.content.toLowerCase().slice(settings.prefix.length).split(' ')[0];
@@ -164,7 +195,7 @@ bot.on('message', async message =>  //author
             if (!args[0]) { 
                 var output = await eco.FetchBalance(message.author.id)
                 const embed = new MessageEmbed()
-                .setColor(settings.svrclr)
+                .setColor(settings.yellow)
                 .setDescription(`💶 **${message.author}** currently has **${output.balance}** lowbucks!`)
                 //.setFooter(settings.copyright, 'https://i.imgur.com/w0y9l7X.png');
                 message.channel.send(embed);
@@ -317,29 +348,74 @@ bot.on('message', async message =>  //author
         .addField(`${user.tag} Balance:`, '`'+`${transfer.ToUser} Lowbucks`+'`', false)
         message.channel.send(embed); 
     }
-    if (command === 'dicebet') { 
+    if (command === 'dicebet' || command === 'db' || command === 'bet') { 
         var user;
-        var bet = args[1]
+        var bet = args[1];
         user = message.mentions.users.first(); 
         if(user) {
             if(!bet) {
                 const embed = new MessageEmbed()
                 .setColor(settings.svrclr)
                 .setDescription('**Usage:** /dicebet [user] [bet]\n`ex. /dicebet @Lowkid 1000`')
-                message.channel.send(embed); 
-            } else {
-                var p1 = Math.floor(Math.random()*6 + 1);
-                var p2 = Math.floor(Math.random()*6 + 1);
+                message.channel.send(embed);
+                return;
+            }
+            var bal = await eco.FetchBalance(message.author.id)
+            if(bal.balance < bet) {
                 const embed = new MessageEmbed()
                 .setColor(settings.svrclr)
-                .setDescription(`${message.author} roll the dice: ${p1} ${user} roll the dice: ${p2}`)
-                message.channel.send(embed); 
-                //if (p1 = p2) return message.reply('TIE')
-                if (p1 > p2) return message.reply(`winner:${message.author}`)
-                else if (p1 < p2) return message.reply(`winner:${user}`)
-                else if (p1 = p2) return message.reply('TIE')
+                .setDescription(`${message.author}, you don't have that much money.`)
+                message.channel.send(embed);
+                return;
             }
-        } else {
+            if(bet < 1) {
+                const embed = new MessageEmbed()
+                .setColor(settings.svrclr)
+                .setDescription(`${message.author}, you can't bet less than 1 lowbuck.`)
+                message.channel.send(embed);
+                return;
+            }
+            if(user === message.author) {
+                const embed = new MessageEmbed()
+                .setColor(settings.svrclr)
+                .setDescription(`${message.author}, you can't offer a bet to yourself.`)
+                message.channel.send(embed);
+                return;
+            }
+            else {
+                var diceidd;
+                var authoridd;
+                var amount;
+                for(let i = 0; ; i++) {
+                    if(dicewithid[i] === user.id) {
+                        dicewithid[i] = void 0; //set as undefined
+                    }
+                    if(authorid[i] === message.author.id) {
+                        dicewithid[i] = user.id;
+                        diceamount[i] = bet;
+                        diceidd = dicewithid[i];
+                        amount = diceamount[i];
+                        authoridd = authorid[i];
+                        break;
+                    }
+                    if(authorid[i] == null) {
+                        dicewithid[i] = user.id;
+                        diceamount[i] = bet;
+                        diceidd = dicewithid[i];
+                        amount = diceamount[i];
+                        authorid[i] = message.author.id;
+                        authoridd = authorid[i];
+                        break;
+                    }
+                }
+                const embed = new MessageEmbed()
+                .setColor(settings.svrclr)
+                .setDescription("<@" + authoridd + ">" + " has offered a dice bet to " + "<@" + diceidd + ">" + " for **" + amount + "** lowbucks.")
+                .setFooter('Type /acceptbet or /ab to accept.', 'https://i.imgur.com/w0y9l7X.png')
+                message.channel.send(embed);
+            }
+        }
+        else {
             if(!args[0]) {
                 const embed = new MessageEmbed()
                 .setColor(settings.svrclr)
@@ -348,7 +424,123 @@ bot.on('message', async message =>  //author
             }
         }
     }
- 
+    if (command === 'acceptbet' || command === 'ab') {
+
+        for(let i = 0;i < dicewithid.length ; i++) {
+            if(dicewithid[i] == message.author.id) {
+                var bal = await eco.FetchBalance(message.author.id);
+                if(bal.balance < diceamount[i]) {
+                    const embed = new MessageEmbed()
+                    .setColor(settings.svrclr)
+                    .setDescription(`${message.author}, you can't afford to accept this bet.`)
+                    message.channel.send(embed);
+                    dicewithid[i] = void 0; // reset this variable to null
+                    authorid[i] = void 0; //reset this variable to null
+                    return;
+                }
+                var balauthor = await eco.FetchBalance(authorid[i]);
+                if(balauthor.balance < diceamount[i]) {
+                    const embed = new MessageEmbed()
+                    .setColor(settings.svrclr)
+                    .setDescription("<@" + authorid[i] + "> can't afford to accept this bet.")
+                    message.channel.send(embed);
+                    dicewithid[i] = void 0; // reset this variable to null
+                    authorid[i] = void 0; //reset this variable to null
+                    return;
+                }
+                var p1 = Math.floor((Math.random()*6) + 1);
+                var p2 = Math.floor((Math.random()*6) + 1);
+                const embed = new MessageEmbed()
+                .setColor(settings.svrclr)
+                .setDescription(`${message.author} rolls a dice which lands on the number **${p1}**.\n<@` + authorid[i] + `> rolls a dice which lands on the number **${p2}**.`)
+                message.channel.send(embed); 
+
+                if (p1 > p2) {
+                    const embed = new MessageEmbed()
+                    .setColor(settings.yellow)
+                    .setDescription(`${message.author} has won **${diceamount[i]}** lowbucks!`);
+                    message.channel.send(embed);
+                    eco.AddToBalance(message.author.id,diceamount[i]);
+                    eco.SubtractFromBalance(authorid[i],diceamount[i]);
+                }
+                else if (p1 < p2) {
+                    const embed = new MessageEmbed()
+                    .setColor(settings.yellow)
+                    .setDescription(`<@` + authorid[i] + `> has won **${diceamount[i]}** lowbucks!`);
+                    message.channel.send(embed);
+                    eco.AddToBalance(authorid[i],diceamount[i]);
+                    eco.SubtractFromBalance(message.author.id,diceamount[i]);
+                }
+                else if (p1 === p2) {
+                    const embed = new MessageEmbed()
+                    .setColor(settings.svrclr)
+                    .setDescription(`TIE!`);
+                    message.channel.send(embed);
+                }
+
+                dicewithid[i] = void 0; // reset this variable to null
+                authorid[i] = void 0; //reset this variable to null
+
+                return; // end loop and end command if found
+            }
+        }
+        const embed = new MessageEmbed()
+        .setColor(settings.svrclr)
+        .setDescription(`${message.author}, you haven't received any offers for dice betting.`);
+        message.channel.send(embed);
+
+    }
+    if (command === 'duel') { 
+        var bet = args[0];
+        if(!bet) {
+            const embed = new MessageEmbed()
+            .setColor(settings.svrclr)
+            .setDescription('**Usage:** /duel [bet]\n`ex. /duel 1000`')
+            message.channel.send(embed); 
+            return;
+        }
+        var bal = await eco.FetchBalance(message.author.id)
+        if(bal.balance < bet) {
+            const embed = new MessageEmbed()
+            .setColor(settings.svrclr)
+            .setDescription(`${message.author}, you don't have that much money.`)
+            message.channel.send(embed);
+            return;
+        }
+        if(bet < 1) {
+            const embed = new MessageEmbed()
+            .setColor(settings.svrclr)
+            .setDescription(`${message.author}, you can't duel for less than 1 lowbuck.`)
+            message.channel.send(embed);
+            return;
+        }
+        if(bet > 10000) {
+            const embed = new MessageEmbed()
+            .setColor(settings.svrclr)
+            .setDescription(`${message.author}, you can't duel for more than 10,000 lowbucks.`)
+            message.channel.send(embed);
+            return;
+        }
+        else {
+            var p1 = Math.floor((Math.random()*3) + 1); // author
+            var p2 = Math.floor((Math.random()*3) + 1); // bot
+            
+            if (p1 > p2) {
+                eco.AddToBalance(message.author.id,bet)
+                const embed = new MessageEmbed()
+                .setColor(settings.green)
+                .setDescription(`${message.author}, you won **${bet}** lowbucks!`)
+                message.channel.send(embed);
+            }
+            else if (p1 < p2) { 
+                eco.SubtractFromBalance(message.author.id, bet)
+                const embed = new MessageEmbed()
+                .setColor(settings.red)
+                .setDescription(`${message.author}, you lost **${bet}** lowbucks.`)
+                message.channel.send(embed);
+            }
+        }
+    }
     if (command === 'dice') { 
         //var gamble = await eco.Dice(message.author.id, roll, amount).catch(console.error)
         //message.reply(`The dice rolled `+Math.floor(Math.random()*6 + 1))
@@ -545,6 +737,40 @@ bot.on('message', async message =>  //author
         .setImage('https://media.giphy.com/media/perRo4txxsFxe/giphy.gif')
         //.setFooter(settings.copyright, 'https://i.imgur.com/w0y9l7X.png')
         message.channel.send(embed);
+    }
+    if (command === 'work') {
+        if(args[0] === 'illegal') {
+            var output = await eco.Work(message.author.id, {
+                failurerate: 60,
+                money: Math.floor((Math.random() * 3500) + 1500),
+                jobs: ['rugby smuggler', 'drug dealer', 'arms dealer', 'hitman']
+            })
+            if (output.earned == 0) {
+                message.reply('Awh, you did not do your job well so you earned nothing!')
+                return;
+            }
+            const embed = new MessageEmbed()
+            .setColor(settings.svrclr)
+            .setDescription(`${message.author} worked as ${output.job} and earned **${output.earned}** lowbucks.\nNew balance: ${output.balance} lowbucks`)
+            message.channel.send(embed);
+        }
+        else if(args[0] === 'legal') {
+            var output = await eco.Work(message.author.id, {
+                failurerate: 1,
+                money: Math.floor((Math.random() * 350) + 450),
+                jobs: ['trucker', 'pizzaboy', 'barber', 'waterboy', 'waiter']
+            })
+            const embed = new MessageEmbed()
+            .setColor(settings.svrclr)
+            .setDescription(`${message.author} worked as ${output.job} and earned **${output.earned}** lowbucks.\nNew balance: ${output.balance} lowbucks`)
+            message.channel.send(embed);
+        }
+        else {
+            const embed = new MessageEmbed()
+            .setColor(settings.svrclr)
+            .setDescription('**Usage:** /work\n`options: legal, illegal`')
+            message.channel.send(embed);
+        }
     }
     if (command === 'avatar') {
         var user;

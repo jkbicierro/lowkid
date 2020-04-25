@@ -1,7 +1,11 @@
 const { Client, MessageEmbed } = require('discord.js');
 const eco = require("discord-economy");
+const leveling = require("discord-leveling");
 
 const bot = new Client();
+
+let workcooldown = new Set();
+let ecocooldown = new Set();
 
 
 // main settings
@@ -20,6 +24,17 @@ const settings = {
     turflogs: '702806543002763324', // channel id
     familiesrole: '682438247506378760', // role id
     perms: 'ADMINISTRATOR',
+    booster: '683270095677554750',
+    admins: '684957332077412378',
+
+    // role levels
+    lvl10: '682410409965518848',
+    lvl20: '682410410946986002',
+    lvl35: '684243700662009866',
+    lvl50: '682414365948772455',
+    lvl70: '682410398145708086',
+    lvl100: '703583416326684703',
+
     slap: [
         'https://media1.tenor.com/images/3fd96f4dcba48de453f2ab3acd657b53/tenor.gif?itemid=14358509',
         'https://media2.giphy.com/media/Gf3AUz3eBNbTW/giphy.gif',
@@ -62,7 +77,7 @@ const settings = {
 /*const settings = {
     prefix: '/',
     // change mo lang yung token para sa test bot mo
-    token: 'NzAxNDA0NjgzOTAxNTk5Nzc1.XqOJVA.OKeRk-pvIKZG10PV-U3rHFMfgh8', 
+    token: 'NzAxNDE4NTc5NzAyMzE3MDk3.XqPyOQ.hyVVfYhnFdo9zJR9W7iOW9NN0UE', 
     general: '701433491673317417', // Channel ID
     announce: '701433491673317417', // Channel ID
     copyright: '© ᴸᵂᴷᴰ 2020',
@@ -75,6 +90,17 @@ const settings = {
     turflogs: '702813712943415321', // channel id
     familiesrole: '703103980695453737', // role id
     permission: 'ADMINISTRATOR',
+    booster: '703541490898567228',
+    admins: '703541750932963400',
+
+    // role levels
+    lvl10: '703583196897345606',
+    lvl20: '703583247686172719',
+    lvl35: '703583287813210173',
+    lvl50: '703583319517822978',
+    lvl70: '703583372580093982',
+    lvl100: '703583416326684703',
+
     slap: [
         'https://media1.tenor.com/images/3fd96f4dcba48de453f2ab3acd657b53/tenor.gif?itemid=14358509',
         'https://media2.giphy.com/media/Gf3AUz3eBNbTW/giphy.gif',
@@ -117,6 +143,7 @@ bot.on('ready', async message => {
     console.log('Pakantot.');
     bot.user.setActivity('Lowkid v0.5.1');
     setInterval(secondTimer, 1000);
+    setInterval(minuteTimer, 60000);
     counting = false;
 });
 var announced = false;
@@ -154,9 +181,12 @@ function countMembers() {
                         //var newname = current_channel.name.replace(current_channel.name.substring(0, 1), rolewinner.name.substring(0, 1));
                         current_channel.setName(current_channel.name.replace(current_channel.name.substring(1, 2), rolewinner.name.substring(1, 2)));
                         const msgchnl = current_channel.guild.channels.cache.find(confess => confess.id === settings.turflogs);
+                        rolewinner.members.forEach((current_member) => {
+                            eco.AddToBalance(current_member.id, 5000)
+                        });
                         const embed = new MessageEmbed()
                         .setColor(settings.svrclr)
-                        .setDescription(rolewinner.toString() + " has taken over **" + current_channel.name + "** with **" + highest + "** members!")
+                        .setDescription(rolewinner.toString() + " has taken over **" + current_channel.name + "** with **" + highest + "** members and they received **5000** lowbucks each.")
                         msgchnl.send(embed);
                     });
                 }
@@ -180,7 +210,105 @@ function countMembers() {
         }
     });
 }
+function minuteTimer() {
+    const guild = bot.channels.cache.find(category => category.id === settings.turfs).guild; // para makuha yung guild
+    guild.members.cache.forEach((current_member) => {
+        if(current_member.voice.channel) {
+            eco.AddToBalance(current_member.id, 120);
+            leveling.AddXp(current_member.id, 10);
 
+            var profile = leveling.Fetch(current_member.id);
+            if(profile.level == 0) var requiredxp = 50;
+            else var requiredxp = profile.level * 100;
+            if (profile.xp + 1 >= requiredxp) {
+                leveling.AddLevel(current_member.id, 1);
+                leveling.SetXp(current_member.id, 0);
+                eco.AddToBalance(current_member.id, 1500);
+                const embed = new MessageEmbed()
+                .setColor(settings.svrclr)
+                .setDescription(`**You just leveled up to ${profile.level + 1} in Lowkid!**\n\nContinue participating in voice and text channels to gain more XP!`)
+                .setFooter('Type /profile to check your experience.', 'https://i.imgur.com/w0y9l7X.png');
+                current_member.send(embed);
+                const embed2 = new MessageEmbed()
+                .setColor(settings.svrclr)
+                .setDescription(`💶 ${current_member}, you just received **1500** lowbucks for leveling up!`);
+                current_member.send(embed2);
+                if(profile.level + 1 == 10) {
+                    current_member.roles.add(settings.lvl10);
+                    current_member.roles.remove(settings.lvl20);
+                    current_member.roles.remove(settings.lvl35);
+                    current_member.roles.remove(settings.lvl50);
+                    current_member.roles.remove(settings.lvl70);
+                    current_member.roles.remove(settings.lvl100);
+                    const embed3 = new MessageEmbed()
+                    .setColor(settings.svrclr)
+                    .setDescription(`You received a new level title for reaching level **10**!`)
+                    current_member.send(embed3);
+                }
+                else if(profile.level + 1 == 20) {
+                    current_member.roles.add(settings.lvl20);
+                    current_member.roles.remove(settings.lvl10);
+                    current_member.roles.remove(settings.lvl35);
+                    current_member.roles.remove(settings.lvl50);
+                    current_member.roles.remove(settings.lvl70);
+                    current_member.roles.remove(settings.lvl100);
+                    const embed3 = new MessageEmbed()
+                    .setColor(settings.svrclr)
+                    .setDescription(`You received a new level title for reaching level **20**!`)
+                    current_member.send(embed3);
+                }
+                else if(profile.level + 1 == 35) {
+                    current_member.roles.add(settings.lvl35);
+                    current_member.roles.remove(settings.lvl20);
+                    current_member.roles.remove(settings.lvl10);
+                    current_member.roles.remove(settings.lvl50);
+                    current_member.roles.remove(settings.lvl70);
+                    current_member.roles.remove(settings.lvl100);
+                    const embed3 = new MessageEmbed()
+                    .setColor(settings.svrclr)
+                    .setDescription(`You received a new level title for reaching level **35**!`)
+                    current_member.send(embed3);
+                }
+                else if(profile.level + 1 == 50) {
+                    current_member.roles.add(settings.lvl50);
+                    current_member.roles.remove(settings.lvl20);
+                    current_member.roles.remove(settings.lvl35);
+                    current_member.roles.remove(settings.lvl10);
+                    current_member.roles.remove(settings.lvl70);
+                    current_member.roles.remove(settings.lvl100);
+                    const embed3 = new MessageEmbed()
+                    .setColor(settings.svrclr)
+                    .setDescription(`You received a new level title for reaching level **50**!`)
+                    current_member.send(embed3);
+                }
+                else if(profile.level + 1 == 70) {
+                    current_member.roles.add(settings.lvl70);
+                    current_member.roles.remove(settings.lvl20);
+                    current_member.roles.remove(settings.lvl35);
+                    current_member.roles.remove(settings.lvl50);
+                    current_member.roles.remove(settings.lvl10);
+                    current_member.roles.remove(settings.lvl100);
+                    const embed3 = new MessageEmbed()
+                    .setColor(settings.svrclr)
+                    .setDescription(`You received a new level title for reaching level **70**!`)
+                    current_member.send(embed3);
+                }
+                else if(profile.level + 1 == 100) {
+                    current_member.roles.add(settings.lvl100);
+                    current_member.roles.remove(settings.lvl20);
+                    current_member.roles.remove(settings.lvl35);
+                    current_member.roles.remove(settings.lvl50);
+                    current_member.roles.remove(settings.lvl70);
+                    current_member.roles.remove(settings.lvl10);
+                    const embed3 = new MessageEmbed()
+                    .setColor(settings.svrclr)
+                    .setDescription(`You received a new level title for reaching level **100**!`)
+                    current_member.send(embed3);
+                }
+            }
+        }
+    });
+}
 function secondTimer() {
     var date = new Date();
 
@@ -239,8 +367,7 @@ bot.on('guildMemberAdd', member => { // user
     .setThumbnail(member.user.displayAvatarURL())
     .setColor(settings.svrclr)
     .setImage('https://media.discordapp.net/attachments/682783839944572976/683582223101722624/awe.jpg')
-    .setDescription(`Welcome to **Lowkid**, ${member}. *this server is for people to socialize, and interests such as **anime, manga, games, art, and more** to be shared as one!*\n\n\
-        Don't forget to check <#682933389791068181> to get more info. You can also input this commands, **/help, /updates, /sponsor, etc**`);
+    .setDescription(`Welcome to **Lowkid**, ${member}. *This server is for people to socialize, and interests such as **anime, manga, games, art, and more** to be shared as one!*\n\nDon't forget to check <#682933389791068181> to get more info. You can also input these commands, **/help, /updates, /sponsor**`);
     const lwkd = bot.emojis.cache.find(emoji => emoji.name === 'lowkid2');
     const emoji1 = bot.emojis.cache.find(emoji => emoji.name === 'nani');
     const aaawsa = bot.channels.cache.find(aaawsa => aaawsa.id === settings.general)
@@ -265,6 +392,106 @@ bot.on('message', async message =>  //author
     
     if (!message.content.startsWith(settings.prefix) || message.author.bot) return;
 
+    if(!ecocooldown.has(message.author.id)) {
+        eco.AddToBalance(message.author.id, 10);
+        ecocooldown.add(message.author.id);
+        setTimeout(() => {
+            ecocooldown.delete(message.author.id);
+        }, 10000);
+        var profile = await leveling.Fetch(message.author.id);
+        leveling.AddXp(message.author.id, 1)
+        //If user xp higher than 100 add level
+        if(profile.level == 0) var requiredxp = 50;
+        else var requiredxp = profile.level * 100;
+        if (profile.xp + 1 >= requiredxp) {
+            await leveling.AddLevel(message.author.id, 1);
+            await leveling.SetXp(message.author.id, 0);
+            eco.AddToBalance(message.author.id, 1500);
+            const embed = new MessageEmbed()
+            .setColor(settings.svrclr)
+            .setDescription(`**You just leveled up to ${profile.level + 1} in Lowkid!**\n\nContinue participating in voice and text channels to gain more XP!`)
+            .setFooter('Type /profile to check your experience.', 'https://i.imgur.com/w0y9l7X.png');
+            message.author.send(embed);
+            const embed2 = new MessageEmbed()
+            .setColor(settings.svrclr)
+            .setDescription(`💶 ${message.author}, you just received **1500** lowbucks for leveling up!`);
+            message.author.send(embed2);
+            if(profile.level + 1 == 10) {
+                message.member.roles.add(settings.lvl10);
+                message.member.roles.remove(settings.lvl20);
+                message.member.roles.remove(settings.lvl35);
+                message.member.roles.remove(settings.lvl50);
+                message.member.roles.remove(settings.lvl70);
+                message.member.roles.remove(settings.lvl100);
+                const embed3 = new MessageEmbed()
+                .setColor(settings.svrclr)
+                .setDescription(`You received a new level title for reaching level **10**!`)
+                message.author.send(embed3);
+            }
+            else if(profile.level + 1 == 20) {
+                message.member.roles.add(settings.lvl20);
+                message.member.roles.remove(settings.lvl10);
+                message.member.roles.remove(settings.lvl35);
+                message.member.roles.remove(settings.lvl50);
+                message.member.roles.remove(settings.lvl70);
+                message.member.roles.remove(settings.lvl100);
+                const embed3 = new MessageEmbed()
+                .setColor(settings.svrclr)
+                .setDescription(`You received a new level title for reaching level **20**!`)
+                message.author.send(embed3);
+            }
+            else if(profile.level + 1 == 35) {
+                message.member.roles.add(settings.lvl35);
+                message.member.roles.remove(settings.lvl20);
+                message.member.roles.remove(settings.lvl10);
+                message.member.roles.remove(settings.lvl50);
+                message.member.roles.remove(settings.lvl70);
+                message.member.roles.remove(settings.lvl100);
+                const embed3 = new MessageEmbed()
+                .setColor(settings.svrclr)
+                .setDescription(`You received a new level title for reaching level **35**!`)
+                message.author.send(embed3);
+            }
+            else if(profile.level + 1 == 50) {
+                message.member.roles.add(settings.lvl50);
+                message.member.roles.remove(settings.lvl20);
+                message.member.roles.remove(settings.lvl35);
+                message.member.roles.remove(settings.lvl10);
+                message.member.roles.remove(settings.lvl70);
+                message.member.roles.remove(settings.lvl100);
+                const embed3 = new MessageEmbed()
+                .setColor(settings.svrclr)
+                .setDescription(`You received a new level title for reaching level **50**!`)
+                message.author.send(embed3);
+            }
+            else if(profile.level + 1 == 70) {
+                message.member.roles.add(settings.lvl70);
+                message.member.roles.remove(settings.lvl20);
+                message.member.roles.remove(settings.lvl35);
+                message.member.roles.remove(settings.lvl50);
+                message.member.roles.remove(settings.lvl10);
+                message.member.roles.remove(settings.lvl100);
+                const embed3 = new MessageEmbed()
+                .setColor(settings.svrclr)
+                .setDescription(`You received a new level title for reaching level **70**!`)
+                message.author.send(embed3);
+            }
+            else if(profile.level + 1 == 100) {
+                message.member.roles.add(settings.lvl100);
+                message.member.roles.remove(settings.lvl20);
+                message.member.roles.remove(settings.lvl35);
+                message.member.roles.remove(settings.lvl50);
+                message.member.roles.remove(settings.lvl70);
+                message.member.roles.remove(settings.lvl10);
+                const embed3 = new MessageEmbed()
+                .setColor(settings.svrclr)
+                .setDescription(`You received a new level title for reaching level **100**!`)
+                message.author.send(embed3);
+            }
+
+        }
+    }
+
     if (command === 'bal') {
         var user;
         user = message.mentions.users.first(); 
@@ -287,42 +514,104 @@ bot.on('message', async message =>  //author
             message.channel.send(embed);
         }
     }
-    if (command === 'leaderboard') {
- 
-        //If you use discord-economy guild based you can use the filter() function to only allow the database within your guild
-        //(message.author.id + message.guild.id) can be your way to store guild based id's
-        //filter: x => x.userid.endsWith(message.guild.id)
-     
-        //If you put a mention behind the command it searches for the mentioned user in database and tells the position.
-        if (message.mentions.users.first()) {
-     
-          var output = await eco.Leaderboard({
-            filter: x => x.balance > 50,
-            search: message.mentions.users.first().id
-          })
-          message.channel.send(`The user ${message.mentions.users.first().tag} is number ${output} on my leaderboard!`);
-     
-        } else {
-     
-          eco.Leaderboard({
-            limit: 3, //Only takes top 3 ( Totally Optional )
-            filter: x => x.balance > 50 //Only allows people with more than 100 balance ( Totally Optional )
-          }).then(async users => { //make sure it is async
-     
-            if (users[0]) var firstplace = await bot.fetchUser(users[0].userid) //Searches for the user object in discord for first place
-            if (users[1]) var secondplace = await bot.fetchUser(users[1].userid) //Searches for the user object in discord for second place
-            if (users[2]) var thirdplace = await bot.fetchUser(users[2].userid) //Searches for the user object in discord for third place
- 
-            message.channel.send(`My leaderboard:
-     
-    1 - ${firstplace && firstplace.tag || 'Nobody Yet'} : ${users[0] && users[0].balance || 'None'}
-    2 - ${secondplace && secondplace.tag || 'Nobody Yet'} : ${users[1] && users[1].balance || 'None'}
-    3 - ${thirdplace && thirdplace.tag || 'Nobody Yet'} : ${users[2] && users[2].balance || 'None'}`)
-     
-          })
-     
+    if (command === 'donators') {
+        var booster = message.guild.roles.cache.find(role => role.id === settings.booster);
+        const embed = new MessageEmbed()
+        .setAuthor('Lowkid Boosters', 'https://i.imgur.com/w0y9l7X.png')
+        .setColor(settings.svrclr);
+        var desc = "";
+        var count = 1;
+        booster.members.forEach((current_member) => {
+            desc = desc.concat(`**${count}**. ${current_member}\n`)
+            count++
+        });
+        embed.setDescription(desc);
+        message.channel.send(embed);
+    }
+    if (command === 'admins') {
+        var staff = message.guild.roles.cache.find(role => role.id === settings.admins);
+        const embed = new MessageEmbed()
+        .setAuthor('Lowkid Admins', 'https://i.imgur.com/w0y9l7X.png')
+        .setColor(settings.svrclr);
+        var desc = "";
+        var count = 1;
+        staff.members.forEach((current_member) => {
+            desc = desc.concat(`**${count}**. ${current_member}\n`)
+            count++
+        });
+        embed.setDescription(desc);
+        message.channel.send(embed);
+    }/*
+    if (command === 'leaderboard' || command === 'lb') {
+        if(args[0] === 'lowbucks') {
+            eco.Leaderboard({
+                limit: 15,
+            }).then(async users => {
+                
+                if (users[0]) var place1 = await bot.users.fetch(users[0].userid) //Searches for the user object in discord for first place
+                if (users[1]) var place2 = await bot.users.fetch(users[1].userid) //Searches for the user object in discord for second place
+                if (users[2]) var place3 = await bot.users.fetch(users[2].userid) //Searches for the user object in discord for third place
+                if (users[3]) var place4 = await bot.users.fetch(users[3].userid) //Searches for the user object in discord for first place
+                if (users[4]) var place5 = await bot.users.fetch(users[4].userid) //Searches for the user object in discord for second place
+                if (users[5]) var place6 = await bot.users.fetch(users[5].userid) //Searches for the user object in discord for third place
+                if (users[6]) var place7 = await bot.users.fetch(users[6].userid) //Searches for the user object in discord for first place
+                if (users[7]) var place8 = await bot.users.fetch(users[7].userid) //Searches for the user object in discord for second place
+                if (users[8]) var place9 = await bot.users.fetch(users[8].userid) //Searches for the user object in discord for third place
+                if (users[9]) var place10 = await bot.users.fetch(users[9].userid) //Searches for the user object in discord for first place
+                if (users[10]) var place11 = await bot.users.fetch(users[10].userid) //Searches for the user object in discord for second place
+                if (users[11]) var place12 = await bot.users.fetch(users[11].userid) //Searches for the user object in discord for third place
+                if (users[12]) var place13 = await bot.users.fetch(users[12].userid) //Searches for the user object in discord for first place
+                if (users[13]) var place14 = await bot.users.fetch(users[13].userid) //Searches for the user object in discord for second place
+                if (users[14]) var place15 = await bot.users.fetch(users[14].userid) //Searches for the user object in discord for third place
+
+                const embed = new MessageEmbed()
+                .setAuthor('Lowkid Economy Leaderboard', 'https://i.imgur.com/w0y9l7X.png')
+                .setColor(settings.svrclr)
+                .setDescription(`**1.** ${place1 || '-'} | ${users[0] && users[0].balance || 'No'} lowbucks\n**2.** ${place2 || '-'} | ${users[1] && users[1].balance || 'No'} lowbucks\n**3.** ${place3 || '-'} | ${users[2] && users[2].balance || 'No'} lowbucks\n**4.** ${place4 || '-'} | ${users[3] && users[3].balance || 'No'} lowbucks\n**5.** ${place5 || '-'} | ${users[4] && users[4].balance || 'No'} lowbucks\n**6.** ${place6 || '-'} | ${users[5] && users[5].balance || 'No'} lowbucks\n**7.** ${place7 || '-'} | ${users[6] && users[6].balance || 'No'} lowbucks\n**8.** ${place8 || '-'} | ${users[7] && users[7].balance || 'No'} lowbucks\n**9.** ${place9 || '-'} | ${users[8] && users[8].balance || 'No'} lowbucks\n**10.** ${place10 || '-'} | ${users[9] && users[9].balance || 'No'} lowbucks\n**11.** ${place11 || '-'} | ${users[10] && users[10].balance || 'No'} lowbucks\n**12.** ${place12 || '-'} | ${users[11] && users[11].balance || 'No'} lowbucks\n**13.** ${place13 || '-'} | ${users[12] && users[12].balance || 'No'} lowbucks\n**14.** ${place14 || '-'} | ${users[13] && users[13].balance || 'No'} lowbucks\n**15.** ${place15 || '-'} | ${users[14] && users[14].balance || 'No'} lowbucks`);
+
+                //.setFooter(settings.copyright, 'https://i.imgur.com/w0y9l7X.png');
+                message.channel.send(embed);
+        
+            })
         }
-      }
+        else if(args[0] === 'levels') {
+            leveling.Leaderboard({
+                limit: 15,
+            }).then(async users => { //make sure it is async
+        
+                if (users[0]) var place1 = await bot.users.fetch(users[0].userid) //Searches for the user object in discord for first place
+                if (users[1]) var place2 = await bot.users.fetch(users[1].userid) //Searches for the user object in discord for second place
+                if (users[2]) var place3 = await bot.users.fetch(users[2].userid) //Searches for the user object in discord for third place
+                if (users[3]) var place4 = await bot.users.fetch(users[3].userid) //Searches for the user object in discord for first place
+                if (users[4]) var place5 = await bot.users.fetch(users[4].userid) //Searches for the user object in discord for second place
+                if (users[5]) var place6 = await bot.users.fetch(users[5].userid) //Searches for the user object in discord for third place
+                if (users[6]) var place7 = await bot.users.fetch(users[6].userid) //Searches for the user object in discord for first place
+                if (users[7]) var place8 = await bot.users.fetch(users[7].userid) //Searches for the user object in discord for second place
+                if (users[8]) var place9 = await bot.users.fetch(users[8].userid) //Searches for the user object in discord for third place
+                if (users[9]) var place10 = await bot.users.fetch(users[9].userid) //Searches for the user object in discord for first place
+                if (users[10]) var place11 = await bot.users.fetch(users[10].userid) //Searches for the user object in discord for second place
+                if (users[11]) var place12 = await bot.users.fetch(users[11].userid) //Searches for the user object in discord for third place
+                if (users[12]) var place13 = await bot.users.fetch(users[12].userid) //Searches for the user object in discord for first place
+                if (users[13]) var place14 = await bot.users.fetch(users[13].userid) //Searches for the user object in discord for second place
+                if (users[14]) var place15 = await bot.users.fetch(users[14].userid) //Searches for the user object in discord for third place
+
+                const embed = new MessageEmbed()
+                .setAuthor('Lowkid Levels Leaderboard', 'https://i.imgur.com/w0y9l7X.png')
+                .setColor(settings.svrclr)
+                .setDescription(`**1.** ${place1 || '-'} | ${'Level ' + (users[0] && users[0].level || '-')}\n**2.** ${place2 || '-'} | ${'Level ' + (users[1] && users[1].level || '-')}\n**3.** ${place3 || '-'} | ${'Level ' + (users[2] && users[2].level || '-')}\n**4.** ${place4 || '-'} | ${'Level ' + (users[3] && users[3].level || '-')}\n**5.** ${place5 || '-'} | ${'Level ' + (users[4] && users[4].level || '-')}\n**6.** ${place6 || '-'} | ${'Level ' + (users[5] && users[5].level || '-')}\n**7.** ${place7 || '-'} | ${'Level ' + (users[6] && users[6].level || '-')}\n**8.** ${place8 || '-'} | ${'Level ' + (users[7] && users[7].level || '-')}\n**9.** ${place9 || '-'} | ${'Level ' + (users[8] && users[8].level || '-')}\n**10.** ${place10 || '-'} | ${'Level ' + (users[9] && users[9].level || '-')}\n**11.** ${place11 || '-'} | ${'Level ' + (users[10] && users[10].level || '-')}\n**12.** ${place12 || '-'} | ${'Level ' + (users[11] && users[11].level || '-')}\n**13.** ${place13 || '-'} | ${'Level ' + (users[12] && users[12].level || '-')}\n**14.** ${place14 || '-'} | ${'Level ' + (users[13] && users[13].level || '-')}\n**15.** ${place15 || '-'} | ${'Level ' + (users[14] && users[14].level || '-')}`);
+
+                //.setFooter(settings.copyright, 'https://i.imgur.com/w0y9l7X.png');
+                message.channel.send(embed);
+        
+            })
+        }
+        else {
+            const embed = new MessageEmbed()
+            .setDescription('**Usage:** /leaderboard [option]\n`Options: levels, lowbucks`')
+            .setColor(settings.svrclr)
+            message.channel.send(embed);
+        }
+    }*/
     if (command === 'daily') {
         var output = await eco.Daily(message.author.id)
         if (output.updated) {
@@ -383,12 +672,20 @@ bot.on('message', async message =>  //author
     
     if (command === 'setmoney') {
         var user = message.mentions.users.first()
-        var amount = args[1]
-        if (!message.member.hasPermission(settings.perms)) return StaffOnly(message.author)
-        if (!user) return Usage(command,'user','amount')
-        if (!amount) return Usage(command,'user','amount')
-
-        var profile = eco.SetBalance(user.id, amount)
+        var amount = args[1];
+        if (!message.member.hasPermission(settings.perms)) return StaffOnly(message.author);
+        if (!user) return Usage(command,'user','amount');
+        if (!amount) return Usage(command,'user','amount');
+        
+        if(amount == 0) {
+            eco.Delete(user.id);
+            const embed = new MessageEmbed()
+            .setColor(settings.green)
+            .setDescription(`💶 Set **${amount}** lowbucks to ${user}'s balance!`)
+            message.channel.send(embed); 
+            return;
+        }
+        eco.SetBalance(user.id, amount);
         const embed = new MessageEmbed()
         .setColor(settings.green)
         .setDescription(`💶 Set **${amount}** lowbucks to ${user}'s balance!`)
@@ -621,6 +918,15 @@ bot.on('message', async message =>  //author
         });
         message.react("👍")
     }
+    if (command === 'level') {
+        var output = await leveling.Fetch(message.author.id);
+        if(output.level == 0) var requiredxp = 50;
+        else var requiredxp = output.level * 100;
+        const embed = new MessageEmbed()
+        .setColor(settings.svrclr)
+        .setDescription(`Your level is **${output.level}** and you have **${output.xp}/${requiredxp}** experience points.`)
+        message.author.send(embed);
+    }
     if (command === 'ajoin') 
     {
         if (message.member.voice.channel) {
@@ -703,9 +1009,15 @@ bot.on('message', async message =>  //author
             message.channel.send(embed);
             return;
         }
+        if (args[0] === 'level') {
+            const embed = new MessageEmbed()
+            .setDescription('**Level**\n`Usage: /level`')
+            .setColor(settings.svrclr)
+            message.channel.send(embed);
+        }
         const embed = new MessageEmbed()
         .setDescription('**Usage:** /help [option]\n\
-            `Options: club, fun, lowbucks, server`')
+            `Options: club, fun, lowbucks, server, level`')
         .setColor(settings.svrclr)
         message.channel.send(embed);
     }
@@ -839,6 +1151,13 @@ bot.on('message', async message =>  //author
         return;
     }
     if (command === 'work') {
+        if(workcooldown.has(message.author.id)) {
+            const embed = new MessageEmbed()
+            .setColor(settings.svrclr)
+            .setDescription(`${message.author}, you need to wait 15 seconds before working again.`);
+            message.channel.send(embed);
+            return;
+        }
         if(args[0] === 'illegal') {
             var output = await eco.Work(message.author.id, {
                 failurerate: 99,
@@ -861,14 +1180,22 @@ bot.on('message', async message =>  //author
                 eco.SubtractFromBalance(message.author.id,moneyx);
                 const embed = new MessageEmbed()
                 .setColor(settings.red)
-                .setDescription(`${message.author} worked as a ${output.job} and got caught so you lost **-${moneyx}** lowbucks.`)
+                .setDescription(`${message.author} worked as a ${output.job} and got caught so you lost **${moneyx}** lowbucks.`);
                 message.channel.send(embed);
+                workcooldown.add(message.author.id);
+                setTimeout(() => {
+                    workcooldown.delete(message.author.id)
+                }, 15000);
                 return;
             }
             const embed = new MessageEmbed()
             .setColor(settings.green)
-            .setDescription(`${message.author} worked as ${output.job} and earned **${output.earned}** lowbucks.`)
+            .setDescription(`${message.author} worked as ${output.job} and earned **${output.earned}** lowbucks.`);
             message.channel.send(embed);
+            workcooldown.add(message.author.id);
+            setTimeout(() => {
+                workcooldown.delete(message.author.id)
+            }, 15000);
         }
         else if(args[0] === 'legal') {
             var output = await eco.Work(message.author.id, {
@@ -881,14 +1208,22 @@ bot.on('message', async message =>  //author
                 eco.AddToBalance(message.author.id, moneyx);
                 const embed = new MessageEmbed()
                 .setColor(settings.green)
-                .setDescription(`${message.author} worked as ${output.job} and earned **${moneyx}** lowbucks.`)
+                .setDescription(`${message.author} worked as ${output.job} and earned **${moneyx}** lowbucks.`);
                 message.channel.send(embed);
+                workcooldown.add(message.author.id);
+                setTimeout(() => {
+                    workcooldown.delete(message.author.id)
+                }, 15000);
                 return;
             }
             const embed = new MessageEmbed()
             .setColor(settings.green)
-            .setDescription(`${message.author} worked as ${output.job} and earned **${output.earned}** lowbucks.`)
+            .setDescription(`${message.author} worked as ${output.job} and earned **${output.earned}** lowbucks.`);
             message.channel.send(embed);
+            workcooldown.add(message.author.id);
+            setTimeout(() => {
+                workcooldown.delete(message.author.id)
+            }, 15000);
         }
         else {
             const embed = new MessageEmbed()
@@ -909,7 +1244,7 @@ bot.on('message', async message =>  //author
      
         message.reply('Error: Could not find the user in database.')
      
-      }
+    }
     if (command === 'avatar') {
         var user;
         user = message.mentions.users.first(); 

@@ -141,7 +141,7 @@ const settings = {
 
 bot.on('ready', async message => {
     console.log('Pakantot.');
-    bot.user.setActivity('Lowkid v0.5.1');
+    bot.user.setActivity('Lowkid v0.5.3');
     setInterval(secondTimer, 1000);
     setInterval(minuteTimer, 60000);
     counting = false;
